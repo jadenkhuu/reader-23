@@ -8,7 +8,9 @@ read-23
 Description
 -----
 
-read-23 is an application which aims to address the challenge of visual tracking in traditional paragraph and text formatting to assist users in reading and comprehension. Building upon an existing prototype, the app will iterating through each word in a sentence, displaying them sequentially at a centralised position, increasing the users ability to read words quickly.
+read-23 is an application which aims to address the challenge of visual tracking in traditional paragraph and text formatting to assist users in reading and comprehension. It is built on the scientific research method called Rapid serial visual presentation (RSVP) which involves presenting a series of visual stimuli, such as words or images, one after another in quick succession at the same location.
+
+Building upon an existing prototype, the app will iterating through each word in a sentence, displaying them sequentially at a centralised position, increasing the users ability to read words quickly.
 
 Some integrated features include an adjustable words per minute pace (WPM), visual tracking of words through sentence highlighting, and sentence tracking/navigating through a paragraph while reading similarly to video scrubbing.
 
