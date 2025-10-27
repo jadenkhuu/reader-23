@@ -73,7 +73,6 @@ function createOverlayWindow() {
   overlayWindow.on('closed', () => {
     overlayWindow = null;
   });
-
 }
 
 // Create border window to show the selection
