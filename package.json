@@ -5,7 +5,8 @@
   "description": "My Electron application description",
   "main": "src/index.js",
   "scripts": {
-    "start": "electron-forge start",
+    "dev": "electron-forge start",
+    "dev:windows": "./dev-windows.sh",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",

@@ -1,4 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, screen } = require('electron');
+
 const path = require('node:path');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -47,8 +48,14 @@ function createOverlayWindow() {
     return;
   }
 
+  const mainWindowBounds = mainWindow.getBounds();
+  const currentDisplay = screen.getDisplayMatching(mainWindowBounds);
+
   overlayWindow = new BrowserWindow({
-    fullscreen: true,
+    x: currentDisplay.bounds.x,
+    y: currentDisplay.bounds.y,
+    width: currentDisplay.bounds.width,
+    height: currentDisplay.bounds.height,
     frame: false,
     transparent: true,
     alwaysOnTop: true,
