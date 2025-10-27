@@ -74,8 +74,6 @@ function createOverlayWindow() {
     overlayWindow = null;
   });
 
-  // Optional: Open DevTools for debugging overlay
-  // overlayWindow.webContents.openDevTools();
 }
 
 // Create border window to show the selection
@@ -84,10 +82,17 @@ function createBorderWindow(coordinates) {
   if (borderWindow) {
     borderWindow.close();
   }
+  // Get the display where the overlay was shown
+  const mainWindowBounds = mainWindow.getBounds();
+  const currentDisplay = screen.getDisplayMatching(mainWindowBounds);
+
+  // Adjust coordinates to be absolute (add display offset)
+  const absoluteX = currentDisplay.bounds.x + coordinates.x;
+  const absoluteY = currentDisplay.bounds.y + coordinates.y;
 
   borderWindow = new BrowserWindow({
-    x: coordinates.x,
-    y: coordinates.y,
+    x: absoluteX,
+    y: absoluteY,
     width: coordinates.width,
     height: coordinates.height,
     frame: false,
@@ -101,7 +106,6 @@ function createBorderWindow(coordinates) {
       contextIsolation: true,
     },
   });
-
   // Make the window click-through
   borderWindow.setIgnoreMouseEvents(true);
 
