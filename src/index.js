@@ -28,11 +28,12 @@ let ocrData = {
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 500,
-    height: 700,
+    width: 405,
+    height: 600,
     resizable: false,
     maximizable: false,
-    fullscreenable: false,
+    // fullscreenable: false,
+    alwaysOnTop: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: false,
@@ -49,8 +50,7 @@ const createWindow = () => {
 
 // Create overlay window for screen selection
 function createOverlayWindow() {
-  // Don't create if already exists
-  if (overlayWindow) {
+    if (overlayWindow) {
     overlayWindow.focus();
     return;
   }
@@ -127,14 +127,14 @@ function createBorderWindow(coordinates) {
 async function captureSelectedArea(coordinates) {
   try {
     console.log('Capturing screenshot of selected area...', coordinates);
-
+    
     // Get the display where the selection was made
     const mainWindowBounds = mainWindow.getBounds();
     const currentDisplay = screen.getDisplayMatching(mainWindowBounds);
-
+    
     // Calculate scale factor for high DPI displays
     const scaleFactor = currentDisplay.scaleFactor || 1;
-
+    
     // Get all available sources with appropriate size
     const sources = await desktopCapturer.getSources({
       types: ['screen'],
@@ -153,9 +153,9 @@ async function captureSelectedArea(coordinates) {
     // Use the first source (main screen capture)
     const source = sources[0];
     const screenshot = source.thumbnail;
-
+    
     console.log('Screenshot size:', screenshot.getSize());
-
+    
     // Crop to selected area
     // Adjust coordinates for scale factor
     const cropArea = {
@@ -164,12 +164,12 @@ async function captureSelectedArea(coordinates) {
       width: Math.round(coordinates.width * scaleFactor),
       height: Math.round(coordinates.height * scaleFactor)
     };
-
+    
     console.log('Crop area:', cropArea);
-
+    
     // Crop the screenshot
     const croppedImage = screenshot.crop(cropArea);
-
+    
     // Resize if too large (optimization for OCR)
     const maxDimension = 1920;
     let finalImage = croppedImage;
@@ -177,26 +177,26 @@ async function captureSelectedArea(coordinates) {
       const aspectRatio = croppedImage.getSize().width / croppedImage.getSize().height;
       const newWidth = aspectRatio > 1 ? maxDimension : Math.round(maxDimension * aspectRatio);
       const newHeight = aspectRatio > 1 ? Math.round(maxDimension / aspectRatio) : maxDimension;
-
-      finalImage = croppedImage.resize({
-        width: newWidth,
+      
+      finalImage = croppedImage.resize({ 
+        width: newWidth, 
         height: newHeight,
         quality: 'good'
       });
       console.log('Resized to:', finalImage.getSize());
     }
-
+    
     // Convert to PNG buffer
     const imageBuffer = finalImage.toPNG();
-
+    
     console.log('Image buffer size:', imageBuffer.length, 'bytes');
-
+    
     // DEBUG: Save cropped image to file for inspection
     const fs = require('fs');
     const debugPath = path.join(__dirname, 'debug-screenshot.png');
     fs.writeFileSync(debugPath, imageBuffer);
     console.log('Debug screenshot saved to:', debugPath);
-
+    
     return imageBuffer;
   } catch (error) {
     console.error('Screenshot capture error:', error);
@@ -209,7 +209,7 @@ async function processOCR(imageBuffer, coordinates) {
   try {
     console.log('Starting OCR processing...');
     ocrData.isProcessing = true;
-
+    
     // Notify renderer that OCR is processing
     mainWindow.webContents.send('ocr-processing');
 
@@ -226,7 +226,7 @@ async function processOCR(imageBuffer, coordinates) {
 
     // Run Tesseract OCR with worker
     const result = await worker.recognize(imageBuffer);
-
+    
     // Terminate worker to free resources
     await worker.terminate();
 
@@ -235,7 +235,7 @@ async function processOCR(imageBuffer, coordinates) {
 
     // Extract structured data from Tesseract result
     const structuredData = extractStructuredData(result.data, coordinates);
-
+    
     // Store OCR data
     ocrData.paragraphs = structuredData.paragraphs;
     ocrData.rawText = result.data.text;
@@ -260,82 +260,97 @@ async function processOCR(imageBuffer, coordinates) {
 // NEW: Extract structured data from Tesseract result
 function extractStructuredData(tesseractData, selectionCoords) {
   const paragraphs = [];
-
+  
   console.log('Extracting structured data...');
   console.log('Tesseract data keys:', Object.keys(tesseractData));
-
+  
   // Helper function to split words on special characters
   function splitWordOnSpecialChars(word) {
     const words = [];
     const text = word.text;
-
-    // Check if word contains em-dash, en-dash, or double hyphen
-    if (!text.includes('—') && !text.includes('–') && !text.includes('--')) {
-      // No special chars, return original word
+    
+    // Debug: Log the word and its character codes
+    console.log('Processing word:', text);
+    if (text.length < 30) { // Only log short words to avoid spam
+      console.log('Character codes:', text.split('').map(c => c.charCodeAt(0)));
+    }
+    
+    // Check for various dash characters
+    // Em-dash: — (U+2014, code 8212)
+    // En-dash: – (U+2013, code 8211)
+    // Regular hyphen: - (U+002D, code 45)
+    const hasDash = /[—–\-]/.test(text);
+    
+    if (!hasDash) {
+      // No dashes found, return original word
       return [word];
     }
-
-    // Split the text manually
+    
+    console.log('Found dash in word, splitting...');
+    
+    // Split on any dash-like character
     let currentPart = '';
     let partIndex = 0;
-
+    
     for (let i = 0; i < text.length; i++) {
       const char = text[i];
-
-      // Check for em-dash, en-dash, or start of double hyphen
-      if (char === '—' || char === '–' || (char === '-' && i + 1 < text.length && text[i + 1] === '-')) {
+      const charCode = char.charCodeAt(0);
+      
+      // Check if this is any kind of dash
+      // Em-dash: 8212, En-dash: 8211, Hyphen: 45
+      const isDash = charCode === 8212 || charCode === 8211 || charCode === 45;
+      
+      if (isDash) {
         // Save current part if not empty
-        if (currentPart.trim().length > 0) {
+        if (currentPart.length > 0) {
           words.push({
             id: word.id + '_' + partIndex++,
             text: currentPart,
             bbox: word.bbox,
             confidence: word.confidence
           });
+          console.log('  Added part:', currentPart);
         }
-
-        // Save the separator
-        let separator = char;
-        if (char === '-' && i + 1 < text.length && text[i + 1] === '-') {
-          separator = '--';
-          i++; // Skip next hyphen
-        }
-
+        
+        // Save the dash as separate word
         words.push({
           id: word.id + '_' + partIndex++,
-          text: separator,
+          text: char,
           bbox: word.bbox,
           confidence: word.confidence
         });
-
+        console.log('  Added dash:', char, 'code:', charCode);
+        
         currentPart = '';
       } else {
         currentPart += char;
       }
     }
-
+    
     // Don't forget the last part
-    if (currentPart.trim().length > 0) {
+    if (currentPart.length > 0) {
       words.push({
         id: word.id + '_' + partIndex++,
         text: currentPart,
         bbox: word.bbox,
         confidence: word.confidence
       });
+      console.log('  Added final part:', currentPart);
     }
-
+    
+    console.log('Split into', words.length, 'words');
     return words.length > 0 ? words : [word];
   }
-
+  
   // Check if we have lines data (most reliable)
   if (tesseractData.lines && tesseractData.lines.length > 0) {
     console.log('Found', tesseractData.lines.length, 'lines');
-
+    
     // Detect paragraph breaks by analyzing vertical gaps between lines
     const lineGroups = [];
     let currentGroup = [];
     let previousLineBottom = null;
-
+    
     tesseractData.lines.forEach((line, index) => {
       // Skip empty or very short lines (likely noise)
       if (!line.text || line.text.trim().length < 2) {
@@ -347,12 +362,12 @@ function extractStructuredData(tesseractData, selectionCoords) {
         }
         return;
       }
-
+      
       // Calculate gap between lines
       if (previousLineBottom !== null && line.bbox) {
         const gap = line.bbox.y0 - previousLineBottom;
         const avgLineHeight = (line.bbox.y1 - line.bbox.y0);
-
+        
         // If gap is more than 1.5x average line height, it's likely a paragraph break
         if (gap > avgLineHeight * 1.5) {
           if (currentGroup.length > 0) {
@@ -361,20 +376,20 @@ function extractStructuredData(tesseractData, selectionCoords) {
           }
         }
       }
-
+      
       currentGroup.push(line);
       if (line.bbox) {
         previousLineBottom = line.bbox.y1;
       }
     });
-
+    
     // Don't forget the last group
     if (currentGroup.length > 0) {
       lineGroups.push(currentGroup);
     }
-
+    
     console.log('Detected', lineGroups.length, 'paragraph groups');
-
+    
     // Convert each group into a paragraph
     lineGroups.forEach((group, groupIndex) => {
       const paragraphData = {
@@ -404,7 +419,7 @@ function extractStructuredData(tesseractData, selectionCoords) {
               bbox: word.bbox,
               confidence: word.confidence
             });
-
+            
             // Add all split words
             splitWords.forEach(splitWord => {
               lineData.words.push(splitWord);
@@ -417,7 +432,7 @@ function extractStructuredData(tesseractData, selectionCoords) {
 
       paragraphs.push(paragraphData);
     });
-  }
+  } 
   // Fallback: Try blocks/paragraphs structure
   else if (tesseractData.blocks) {
     console.log('Using blocks structure');
@@ -466,13 +481,13 @@ function extractStructuredData(tesseractData, selectionCoords) {
   // Last resort: Parse from plain text
   else if (tesseractData.text) {
     console.log('Falling back to plain text parsing');
-
+    
     // Split by double newlines to detect paragraphs
     const paragraphTexts = tesseractData.text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
-
+    
     paragraphTexts.forEach((paraText, paraIndex) => {
       const lines = paraText.split('\n').filter(line => line.trim().length > 0);
-
+      
       const paragraphData = {
         id: `${paraIndex}`,
         bbox: { x: 0, y: 0, width: 0, height: 0 },
@@ -506,7 +521,7 @@ function extractStructuredData(tesseractData, selectionCoords) {
     });
   }
 
-  console.log('Extracted', paragraphs.length, 'paragraphs with',
+  console.log('Extracted', paragraphs.length, 'paragraphs with', 
     paragraphs.reduce((sum, p) => sum + p.lines.length, 0), 'total lines');
 
   return {
@@ -551,7 +566,7 @@ ipcMain.on('selection-complete', async (event, coordinates) => {
   try {
     const screenshot = await captureSelectedArea(coordinates);
     const ocrResult = await processOCR(screenshot, coordinates);
-
+    
     // Send OCR result to renderer
     mainWindow.webContents.send('ocr-complete', ocrResult);
     console.log('OCR result sent to renderer');
@@ -600,19 +615,19 @@ ipcMain.on('clear-selection', () => {
 // NEW: Handle refresh OCR request
 ipcMain.on('refresh-ocr', async () => {
   console.log('Refresh OCR requested');
-
+  
   // Check if we have a selection
   if (!selectionState.isSelected || !selectionState.coordinates) {
     console.error('No selection to refresh');
     mainWindow.webContents.send('ocr-error', 'No selection to refresh');
     return;
   }
-
+  
   // Re-run OCR with existing coordinates
   try {
     const screenshot = await captureSelectedArea(selectionState.coordinates);
     const ocrResult = await processOCR(screenshot, selectionState.coordinates);
-
+    
     // Send OCR result to renderer
     mainWindow.webContents.send('ocr-complete', ocrResult);
     console.log('OCR refresh complete');
