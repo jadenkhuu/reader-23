@@ -7,14 +7,23 @@
     <script defer src="render.js"></script>
   </head>
   <body>
-    <h1>read-23</h1>
+    <h1>read</h1>
 
     <div id="display-area">
       <p id="display-text">ready to start</p>
     </div>
 
+    <!-- NEW: WPM Control -->
+    <div id="wpm-control">
+      <label for="wpm-slider">WPM:</label>
+      <input type="range" id="wpm-slider" min="100" max="600" value="250" step="10">
+      <input type="number" id="wpm-input" min="100" max="600" value="250" step="10">
+    </div>
+
     <button id="select-button">select</button>
-    <button id="play-pause-button">play/pause</button>
+    <!-- <button id="refresh-button" disabled>refresh</button> -->
+    <button id="play-pause-button">▶</button>
+    <button id="replay-button" disabled>replay</button>
     <button id="next-button">next</button>
 
   </body>

@@ -90,3 +90,7 @@ typings/
 
 # Electron-Forge
 out/
+
+src/ocr-output.json
+src/debug-screenshot.png
+eng.traineddata
