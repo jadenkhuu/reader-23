@@ -28,11 +28,11 @@ let ocrData = {
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 405,
+    width: 407,
     height: 600,
     resizable: false,
     maximizable: false,
-    // fullscreenable: false,
+    fullscreenable: false,
     alwaysOnTop: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),

@@ -2,7 +2,7 @@
 let isSelected = false;
 let selectionCoordinates = null;
 
-// NEW: OCR and reading state
+// OCR and reading state
 let ocrData = null;
 let isPlaying = false;
 let currentParagraphIndex = 0;
@@ -18,20 +18,20 @@ const replayButton = document.getElementById('replay-button');
 const playPauseButton = document.getElementById('play-pause-button');
 const nextButton = document.getElementById('next-button');
 
-// NEW: Get WPM control references
+// Get WPM control references
 const wpmSlider = document.getElementById('wpm-slider');
 const wpmInput = document.getElementById('wpm-input');
 
 // Get display elements
 const displayText = document.getElementById('display-text');
 
-// NEW: Update display text with status message
+// Update display text with status message
 function updateDisplayStatus(message, type = 'normal') {
   displayText.textContent = message;
   displayText.className = type; // Can be: normal, processing, error, success
 }
 
-// NEW: Display a word in the main display area with context
+// Display a word in the main display area with context
 function displayWord(word, prevWord = null, nextWord = null) {
   // Clear and rebuild display
   displayText.innerHTML = '';
