@@ -3,7 +3,7 @@
   "productName": "read-23",
   "version": "1.0.0",
   "description": "My Electron application description",
-  "main": "src/index.js",
+  "main": "src/main/index.js",
   "scripts": {
     "dev": "electron-forge start",
     "package": "electron-forge package",
