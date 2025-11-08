@@ -2,12 +2,16 @@
 /* ===========================
 DEBUG STYLES
 ===============================*/
+/* .word-context-container {
+  background-color: rgba(255, 0, 0, 0.3) !important;
+  border: 2px solid red !important;
+} */
 /* .control-btn {
   background-color: rgba(255, 0, 0, 0.3) !important;
   border: 2px solid red !important;
-}
+} */
 
-.center-btn {
+/* .center-btn {
   background-color: rgba(0, 255, 0, 0.3) !important;
   border: 2px solid green !important;
 } */
@@ -148,27 +152,31 @@ img {
 }
 
 #display-text.word-display {
-  font-size: 32px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: lighter;
 }
 
 .word-context-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  width: 100%;
+  gap: 30px;
+  width: 368px;
 }
 
 .word-previous,
 .word-next {
   font-size: 12px;
-  opacity: 0.5;
+  opacity: 0.3;
 }
 
 .word-current {
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 22px;
+}
+
+#start-title {
+  font-size: 12px;
+  font-weight: 900;
 }
 
 /* ============================================

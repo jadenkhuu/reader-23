@@ -4,7 +4,7 @@ const displayText = document.getElementById('display-text');
 // Update display text with status message
 function updateDisplayStatus(message, type = 'normal') {
   displayText.textContent = message;
-  displayText.className = type; // Can be: normal, processing, error, success
+  displayText.className = type;
 }
 
 // Display a word in the main display area with context
@@ -40,4 +40,9 @@ function displayWord(word, prevWord = null, nextWord = null) {
   }
 
   displayText.appendChild(container);
+
+  requestAnimationFrame(() => {
+    const displayArea = document.getElementById('display-area');
+    scaleWordToFit(currentElement, displayArea);
+  });
 }

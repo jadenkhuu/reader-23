@@ -39,7 +39,7 @@ function splitWordOnSpecialChars(word) {
   // Em-dash: — (U+2014, code 8212)
   // En-dash: – (U+2013, code 8211)
   // Regular hyphen: - (U+002D, code 45)
-  const hasDash = /[—–\-]/.test(text);
+  const hasDash = /[—–]/.test(text);
 
   if (!hasDash) {
     // No dashes found, return original word
@@ -109,19 +109,40 @@ function extractStructuredData(tesseractData, selectionCoords) {
   console.log('Extracting structured data...');
   console.log('Tesseract data keys:', Object.keys(tesseractData));
 
-  // Check if we have lines data (most reliable)
-  if (tesseractData.lines && tesseractData.lines.length > 0) {
+  // Helper to process words with splitting
+  const processWords = (words) => {
+    const processed = [];
+    words.forEach((word, wordIndex) => {
+      const splitWords = splitWordOnSpecialChars({
+        id: wordIndex,
+        text: word.text,
+        bbox: word.bbox,
+        confidence: word.confidence
+      });
+      processed.push(...splitWords);
+    });
+    return processed;
+  };
+
+  // Helper to create line data
+  const createLineData = (line, lineIndex) => ({
+    id: lineIndex,
+    bbox: line.bbox || { x: 0, y: 0, width: 0, height: 0 },
+    text: line.text,
+    confidence: line.confidence,
+    words: line.words ? processWords(line.words) : []
+  });
+
+  // Strategy 1: Use lines with smart paragraph detection
+  if (tesseractData.lines?.length > 0) {
     console.log('Found', tesseractData.lines.length, 'lines');
 
-    // Detect paragraph breaks by analyzing vertical gaps between lines
     const lineGroups = [];
     let currentGroup = [];
     let previousLineBottom = null;
 
-    tesseractData.lines.forEach((line, index) => {
-      // Skip empty or very short lines (likely noise)
+    tesseractData.lines.forEach((line) => {
       if (!line.text || line.text.trim().length < 2) {
-        // If we have accumulated lines, save as paragraph and start new one
         if (currentGroup.length > 0) {
           lineGroups.push(currentGroup);
           currentGroup = [];
@@ -130,12 +151,10 @@ function extractStructuredData(tesseractData, selectionCoords) {
         return;
       }
 
-      // Calculate gap between lines
       if (previousLineBottom !== null && line.bbox) {
         const gap = line.bbox.y0 - previousLineBottom;
-        const avgLineHeight = (line.bbox.y1 - line.bbox.y0);
+        const avgLineHeight = line.bbox.y1 - line.bbox.y0;
 
-        // If gap is more than 1.5x average line height, it's likely a paragraph break
         if (gap > avgLineHeight * OCR_CONFIG.PARAGRAPH_GAP_MULTIPLIER) {
           if (currentGroup.length > 0) {
             lineGroups.push(currentGroup);
@@ -145,154 +164,73 @@ function extractStructuredData(tesseractData, selectionCoords) {
       }
 
       currentGroup.push(line);
-      if (line.bbox) {
-        previousLineBottom = line.bbox.y1;
-      }
+      if (line.bbox) previousLineBottom = line.bbox.y1;
     });
 
-    // Don't forget the last group
-    if (currentGroup.length > 0) {
-      lineGroups.push(currentGroup);
-    }
+    if (currentGroup.length > 0) lineGroups.push(currentGroup);
 
     console.log('Detected', lineGroups.length, 'paragraph groups');
 
-    // Convert each group into a paragraph
     lineGroups.forEach((group, groupIndex) => {
-      const paragraphData = {
+      paragraphs.push({
         id: `${groupIndex}`,
         bbox: group[0].bbox || { x: 0, y: 0, width: 0, height: 0 },
         confidence: tesseractData.confidence,
-        lines: []
-      };
-
-      // Process each line in the group
-      group.forEach((line, lineIndex) => {
-        const lineData = {
-          id: lineIndex,
-          bbox: line.bbox,
-          text: line.text,
-          confidence: line.confidence,
-          words: []
-        };
-
-        // Extract words from line
-        if (line.words && line.words.length > 0) {
-          line.words.forEach((word, wordIndex) => {
-            // Split words that contain em-dashes or other special chars
-            const splitWords = splitWordOnSpecialChars({
-              id: wordIndex,
-              text: word.text,
-              bbox: word.bbox,
-              confidence: word.confidence
-            });
-
-            // Add all split words
-            splitWords.forEach(splitWord => {
-              lineData.words.push(splitWord);
-            });
-          });
-        }
-
-        paragraphData.lines.push(lineData);
+        lines: group.map(createLineData)
       });
-
-      paragraphs.push(paragraphData);
     });
   }
-  // Fallback: Try blocks/paragraphs structure
+  // Strategy 2: Use blocks/paragraphs structure
   else if (tesseractData.blocks) {
     console.log('Using blocks structure');
     tesseractData.blocks.forEach((block, blockIndex) => {
-      if (block.paragraphs) {
-        block.paragraphs.forEach((para, paraIndex) => {
-          const paragraphData = {
-            id: `${blockIndex}-${paraIndex}`,
-            bbox: para.bbox,
-            confidence: para.confidence,
-            lines: []
-          };
-
-          // Extract lines
-          if (para.lines) {
-            para.lines.forEach((line, lineIndex) => {
-              const lineData = {
-                id: lineIndex,
-                bbox: line.bbox,
-                text: line.text,
-                confidence: line.confidence,
-                words: []
-              };
-
-              // Extract words
-              if (line.words) {
-                line.words.forEach((word, wordIndex) => {
-                  lineData.words.push({
-                    id: wordIndex,
-                    text: word.text,
-                    bbox: word.bbox,
-                    confidence: word.confidence
-                  });
-                });
-              }
-
-              paragraphData.lines.push(lineData);
-            });
-          }
-
-          paragraphs.push(paragraphData);
+      block.paragraphs?.forEach((para, paraIndex) => {
+        paragraphs.push({
+          id: `${blockIndex}-${paraIndex}`,
+          bbox: para.bbox,
+          confidence: para.confidence,
+          lines: para.lines?.map(createLineData) || []
         });
-      }
+      });
     });
   }
-  // Last resort: Parse from plain text
+  // Strategy 3: Plain text fallback
   else if (tesseractData.text) {
     console.log('Falling back to plain text parsing');
 
-    // Split by double newlines to detect paragraphs
-    const paragraphTexts = tesseractData.text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+    tesseractData.text
+      .split(/\n\s*\n/)
+      .filter(p => p.trim().length > 0)
+      .forEach((paraText, paraIndex) => {
+        const lines = paraText.split('\n').filter(line => line.trim().length > 0);
 
-    paragraphTexts.forEach((paraText, paraIndex) => {
-      const lines = paraText.split('\n').filter(line => line.trim().length > 0);
-
-      const paragraphData = {
-        id: `${paraIndex}`,
-        bbox: { x: 0, y: 0, width: 0, height: 0 },
-        confidence: tesseractData.confidence,
-        lines: []
-      };
-
-      lines.forEach((lineText, lineIndex) => {
-        const words = lineText.trim().split(/\s+/);
-        const lineData = {
-          id: lineIndex,
+        paragraphs.push({
+          id: `${paraIndex}`,
           bbox: { x: 0, y: 0, width: 0, height: 0 },
-          text: lineText,
           confidence: tesseractData.confidence,
-          words: []
-        };
-
-        words.forEach((wordText, wordIndex) => {
-          lineData.words.push({
-            id: wordIndex,
-            text: wordText,
+          lines: lines.map((lineText, lineIndex) => ({
+            id: lineIndex,
             bbox: { x: 0, y: 0, width: 0, height: 0 },
-            confidence: tesseractData.confidence
-          });
+            text: lineText,
+            confidence: tesseractData.confidence,
+            words: processWords(
+              lineText.trim().split(/\s+/).map((text, i) => ({
+                id: i,
+                text,
+                bbox: { x: 0, y: 0, width: 0, height: 0 },
+                confidence: tesseractData.confidence
+              }))
+            )
+          }))
         });
-
-        paragraphData.lines.push(lineData);
       });
-
-      paragraphs.push(paragraphData);
-    });
   }
 
   console.log('Extracted', paragraphs.length, 'paragraphs with',
     paragraphs.reduce((sum, p) => sum + p.lines.length, 0), 'total lines');
 
   return {
-    paragraphs: paragraphs,
+    paragraphs,
     fullText: tesseractData.text,
     confidence: tesseractData.confidence,
     selectionCoordinates: selectionCoords
