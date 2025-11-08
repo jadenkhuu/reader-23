@@ -1,197 +1,322 @@
-body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
-    sans-serif;
-  margin: auto;
-  max-width: 38rem;
-  padding: 2rem;
+/* ============================================
+   RESET & BASE
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-h1 {
-  margin: 0;
-  margin-bottom: 1rem;
-  color: #333;
-  font-size: 30px;
+html, body {
+  width: 416px;
+  height: 680px;
+  overflow: hidden;
+  background-color: transparent;
 }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ============================================
+   PIXEL ART RENDERING
+   ============================================ */
+
+.pixel-art,
+img {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+/* ============================================
+   APP CONTAINER
+   ============================================ */
+
+#app-container {
+  position: relative;
+  width: 416px;
+  height: 680px;
+}
+
+/* Static background image */
+#background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 416px;
+  height: 680px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================
+   TITLEBAR
+   ============================================ */
+
+#custom-titlebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 416px;
+  height: 30px;
+  -webkit-app-region: drag;
+  z-index: 10;
+}
+
+.window-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  -webkit-app-region: no-drag;
+}
+
+.titlebar-btn {
+  width: 41px;
+  height: 33px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  transition: background-color 0.1s;
+}
+
+.titlebar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.titlebar-btn:active {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ============================================
+   DISPLAY AREA
+   ============================================ */
 
 #display-area {
-  background-color: #f5f5f5;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1rem; 
-  min-height: 180px; 
+  position: absolute;
+  top: 52px;
+  left: 28px;
+  width: 360px;
+  height: 236px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 16px;
+  overflow: hidden;
+  z-index: 5;
 }
+
+#display-text {
+  text-align: center;
+  color: #000;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+#display-text.word-display {
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.word-context-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.word-previous,
+.word-next {
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+.word-current {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* ============================================
+   WPM SLIDER (with custom pixel art handle)
+   ============================================ */
 
 #wpm-control {
+  position: absolute;
+  top: 312px;
+  left: 20px;
+  width: 320px;
+  height: 24px;
+  z-index: 5;
+
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 1.5rem;
-  padding: 0.75rem;
-  background-color: #f5f5f5;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-}
-#wpm-control label {
-  font-weight: 600;
-  font-size: 14px;
-  color: #333;
-  min-width: 45px;
+  gap: 8px;
 }
 
+/* Custom styled range slider */
 #wpm-slider {
   flex: 1;
   height: 6px;
-  border-radius: 3px;
-  background: #ddd;
+  background: transparent;
   outline: none;
   -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
 }
+
+/* WebKit (Chrome, Safari, Edge) - Custom Thumb */
 #wpm-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #0078d4;
+  width: 16px;
+  height: 16px;
+  background-image: url('assets/slider-handle.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   cursor: pointer;
-  transition: background 0.2s;
-}
-#wpm-slider::-webkit-slider-thumb:hover {
-  background: #005a9e;
-}
-#wpm-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #0078d4;
-  cursor: pointer;
+  /* Remove default styling */
   border: none;
-  transition: background 0.2s;
-}
-#wpm-slider::-moz-range-thumb:hover {
-  background: #005a9e;
+  border-radius: 0;
 }
 
+/* Firefox - Custom Thumb */
+#wpm-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background-image: url('assets/slider-handle.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  /* Remove default styling */
+  border: none;
+  border-radius: 0;
+}
+
+/* Remove default track styling */
+#wpm-slider::-webkit-slider-runnable-track {
+  background: transparent;
+  border: none;
+}
+
+#wpm-slider::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+
+/* WPM Number Input */
 #wpm-input {
-  width: 60px;
-  padding: 6px 8px;
-  border: 2px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
+  width: 55px;
+  height: 22px;
+  padding: 2px 4px;
+  border: 1px solid #999;
+  border-radius: 3px;
+  font-size: 11px;
   font-weight: 600;
   text-align: center;
   color: #333;
-  background-color: white;
+  background-color: #fff;
 }
+
 #wpm-input:focus {
   outline: none;
   border-color: #0078d4;
 }
 
-#display-text {
-  margin: 0;
-  color: #666;
-  font-size: 14px;
-  text-align: center;
-  line-height: 1.5;
-}
-#display-text.processing {
-  color: #0078d4;
-  font-weight: 500;
-}
-#display-text.error {
-  color: #d32f2f;
-  font-weight: 500;
-}
-#display-text.success {
-  color: #28a745;
-  font-weight: 500;
-}
-#display-text.word-display {
-  color: #000;
-  font-size: 48px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+/* ============================================
+   CONTROL BUTTONS (Static overlays)
+   ============================================ */
+
+.control-btn {
+  position: absolute;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 5;
   padding: 0;
-  width: 100%;
+  transition: opacity 0.1s;
 }
 
-/* Container for three-word context display */
-.word-context-container {
+/* Select button (dark square above screen) */
+.square-btn {
+  top: 342px;
+  left: 188px;
+  width: 40px;
+  height: 40px;
+}
+
+/* iPod wheel buttons */
+.left-btn {
+  /* Double arrow left - previous */
+  top: 492px;
+  left: 88px;
+  width: 56px;
+  height: 56px;
+}
+
+.right-btn {
+  /* Double arrow right - next */
+  top: 492px;
+  right: 88px;
+  width: 56px;
+  height: 56px;
+}
+
+.bottom-btn {
+  /* Circular arrow - refresh */
+  bottom: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 56px;
+}
+
+/* ============================================
+   DYNAMIC PLAY/PAUSE BUTTON
+   ============================================ */
+
+.center-btn {
+  /* Center of iPod wheel */
+  top: 485px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  /* Container for the image */
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  padding: 0;
+}
+
+/* The actual play/pause icon image */
+#play-pause-icon {
   width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none; /* Clicks go to button, not image */
 }
 
-.word-previous {
-  font-size: 12px;
-  font-weight: 400;
-  color: #000;
-  opacity: 0.5;
-  letter-spacing: 0.01em;
-}
-.word-current {
-  font-size: 36px;
-  font-weight: 600;
-  color: #000;
-  opacity: 1;
-  letter-spacing: 0.02em;
-}
-.word-next {
-  font-size: 12px;
-  font-weight: 400;
-  color: #000;
-  opacity: 0.5;
-  letter-spacing: 0.01em;
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.drag-region {
+  -webkit-app-region: drag;
 }
 
-button {
-  background-color: #0078d4;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-button:hover {
-  background-color: #005a9e;
-}
-button:active {
-  background-color: #004578;
-}
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-#select-button {
-  background-color: #28a745;
-}
-#select-button:hover {
-  background-color: #218838;
-}
-#select-button:active {
-  background-color: #1e7e34;
-}
-
-#replay-button {
-  background-color: #0056b3;
-}
-#replay-button:hover:not(:disabled) {
-  background-color: #004494;
-}
-#replay-button:active:not(:disabled) {
-  background-color: #003d82;
+.no-drag {
+  -webkit-app-region: no-drag;
 }

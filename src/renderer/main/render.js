@@ -152,7 +152,12 @@ function startReading() {
   }
 
   isPlaying = true;
-  playPauseButton.textContent = '❚❚';
+  const playPauseIcon = document.getElementById('play-pause-icon');
+  if (playPauseIcon) {
+    playPauseIcon.src = 'assets/pause-button.png';
+    playPauseIcon.alt = 'pause';
+  }
+
 
   // Display current word with context immediately
   const currentWord = getCurrentWord();
@@ -183,7 +188,13 @@ function stopReading() {
   if (!isPlaying) return;
 
   isPlaying = false;
-  playPauseButton.textContent = '▶';
+
+  // Update button icon
+  const playPauseIcon = document.getElementById('play-pause-icon');
+  if (playPauseIcon) {
+    playPauseIcon.src = 'assets/play-button.png';
+    playPauseIcon.alt = 'play';
+  }
 
   if (readingInterval) {
     clearInterval(readingInterval);

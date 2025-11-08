@@ -1,6 +1,6 @@
 // WPM (Words Per Minute) Configuration
 const WPM_CONFIG = {
-  DEFAULT: 250,
+  DEFAULT: 300,
   MIN: 100,
   MAX: 600
 };
@@ -28,8 +28,8 @@ const IPC_CHANNELS = {
 // Window Configuration
 const WINDOW_CONFIG = {
   MAIN: {
-    WIDTH: 407,
-    HEIGHT: 600,
+    WIDTH: 417,
+    HEIGHT: 680,
     RESIZABLE: false,
     MAXIMIZABLE: false,
     FULLSCREENABLE: false,

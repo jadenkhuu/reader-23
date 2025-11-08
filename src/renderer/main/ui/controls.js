@@ -1,8 +1,10 @@
 // Get button references
 const selectButton = document.getElementById('select-button');
 const replayButton = document.getElementById('replay-button');
-const playPauseButton = document.getElementById('play-pause-button');
 const nextButton = document.getElementById('next-button');
+
+const playPauseButton = document.getElementById('play-pause-button');
+const playPauseIcon = document.getElementById('play-pause-icon');
 
 // Get WPM control references
 const wpmSlider = document.getElementById('wpm-slider');
@@ -31,7 +33,7 @@ function initializeControls() {
     replayLines();
   });
 
-  // Handle Play/Pause button
+  // Handle Play/Pause button with image switching
   playPauseButton.addEventListener('click', () => {
     if (!ocrData) {
       updateDisplayStatus('Please select an area first', 'error');
@@ -40,8 +42,14 @@ function initializeControls() {
 
     if (isPlaying) {
       stopReading();
+      // Switch to play icon
+      playPauseIcon.src = 'assets/play-btn.png';
+      playPauseIcon.alt = 'play';
     } else {
       startReading();
+      // Switch to pause icon
+      playPauseIcon.src = 'assets/pause-btn.png';
+      playPauseIcon.alt = 'pause';
     }
   });
 
