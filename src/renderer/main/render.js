@@ -135,6 +135,7 @@ function advanceWord() {
 // Start reading words
 function startReading() {
   if (isPlaying) return; // Already playing
+
   if (!ocrData || !ocrData.paragraphs.length) {
     updateDisplayStatus('No text to read', 'error');
     return;
@@ -154,10 +155,9 @@ function startReading() {
   isPlaying = true;
   const playPauseIcon = document.getElementById('play-pause-icon');
   if (playPauseIcon) {
-    playPauseIcon.src = 'assets/pause-button.png';
+    playPauseIcon.src = 'assets/pause_btn.png';
     playPauseIcon.alt = 'pause';
   }
-
 
   // Display current word with context immediately
   const currentWord = getCurrentWord();
@@ -192,7 +192,7 @@ function stopReading() {
   // Update button icon
   const playPauseIcon = document.getElementById('play-pause-icon');
   if (playPauseIcon) {
-    playPauseIcon.src = 'assets/play-button.png';
+    playPauseIcon.src = 'assets/play_btn.png';
     playPauseIcon.alt = 'play';
   }
 
@@ -285,7 +285,7 @@ function replayLines() {
 window.electronAPI.onSelectionStored((coordinates) => {
   isSelected = true;
   selectionCoordinates = coordinates;
-  selectButton.textContent = 'clear';
+  // selectButton.textContent = 'clear';
 
   // Update status to show OCR is starting
   updateDisplayStatus('Processing text...', 'processing');
@@ -297,7 +297,7 @@ window.electronAPI.onSelectionStored((coordinates) => {
 window.electronAPI.onSelectionCleared(() => {
   isSelected = false;
   selectionCoordinates = null;
-  selectButton.textContent = 'select';
+  // selectButton.textContent = 'select';
 
   // Disable refresh and replay buttons when no selection
   replayButton.disabled = true;
@@ -350,7 +350,7 @@ window.electronAPI.onOCRComplete((data) => {
   // Enable play/pause, next, and replay buttons
   playPauseButton.disabled = false;
   nextButton.disabled = false;
-  replayButton.disabled = false;
+  // replayButton.disabled = false;
 });
 
 // Listen for OCR error event

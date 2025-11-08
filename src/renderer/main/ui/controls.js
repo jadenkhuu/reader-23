@@ -43,12 +43,12 @@ function initializeControls() {
     if (isPlaying) {
       stopReading();
       // Switch to play icon
-      playPauseIcon.src = 'assets/play-btn.png';
+      playPauseIcon.src = 'assets/play_btn.png';
       playPauseIcon.alt = 'play';
     } else {
       startReading();
       // Switch to pause icon
-      playPauseIcon.src = 'assets/pause-btn.png';
+      playPauseIcon.src = 'assets/pause_btn.png';
       playPauseIcon.alt = 'pause';
     }
   });

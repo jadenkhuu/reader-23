@@ -304,6 +304,7 @@ img {
   align-items: center;
   justify-content: center;
   padding: 0;
+  z-index: 10;
 }
 
 /* The actual play/pause icon image */
@@ -311,7 +312,9 @@ img {
   width:48px;
   height: 56px;
   display: block;
-  pointer-events: none; /* Clicks go to button, not image */
+  pointer-events: none;
+  /* Clicks go to button, not image */
+  z-index: 0;
 }
 
 /* ============================================

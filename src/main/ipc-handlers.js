@@ -136,8 +136,6 @@ function registerIPCHandlers() {
   });
 }
 
-
-
 module.exports = {
   registerIPCHandlers
 };
