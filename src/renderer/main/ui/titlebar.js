@@ -6,8 +6,8 @@
 function initializeTitlebar() {
   // Get button references
   const pinBtn = document.getElementById('pin-btn');
+  const pinBtnIcon = document.getElementById('pin-btn-disabled');
   const minimizeBtn = document.getElementById('minimize-btn');
-  const maximizeBtn = document.getElementById('maximize-btn');
   const closeBtn = document.getElementById('close-btn');
 
   // Toggle pinned window
@@ -18,6 +18,21 @@ function initializeTitlebar() {
       window.electronAPI.togglePinned();
     });
   }
+
+  // Listen for pinned state changes
+  window.electronAPI.onPinnedStateChanged((isPinned) => {
+    console.log('Pinned state changed:', isPinned);
+
+    if (pinBtnIcon) {
+      if (isPinned) {
+        // Pinned - hide the disabled icon (show active state)
+        pinBtnIcon.style.display = 'none';
+      } else {
+        // Unpinned - show the disabled icon
+        pinBtnIcon.style.display = 'block';
+      }
+    }
+  });
 
   // Minimize button
   if (minimizeBtn) {

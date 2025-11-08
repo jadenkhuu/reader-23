@@ -141,8 +141,13 @@ function registerIPCHandlers() {
     const mainWindow = getMainWindow();
     if (mainWindow) {
       const isAlwaysOnTop = mainWindow.isAlwaysOnTop();
-      mainWindow.setAlwaysOnTop(!isAlwaysOnTop, 'floating');
-      console.log(`[Main] Window pinned state set to ${!isAlwaysOnTop}`);
+      const newPinnedState = !isAlwaysOnTop;
+
+      mainWindow.setAlwaysOnTop(newPinnedState, 'floating');
+      console.log(`[Main] Window pinned state set to ${newPinnedState}`);
+
+      // Send the new state back to renderer
+      mainWindow.webContents.send('window-pinned-state-changed', newPinnedState);
     } else {
       console.error('[Main] Main window not found');
     }

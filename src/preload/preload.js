@@ -45,5 +45,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   togglePinned: () => {
     console.log('[Preload] Sending window-toggle-pinned');
     ipcRenderer.send('window-toggle-pinned');
+  },
+  onPinnedStateChanged: (callback) => {
+    ipcRenderer.on('window-pinned-state-changed', (event, isPinned) => {
+      callback(isPinned);
+    });
   }
 });
