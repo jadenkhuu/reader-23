@@ -14,18 +14,17 @@ const wpmInput = document.getElementById('wpm-input');
 // Initialize controls
 function initializeControls() {
   // Handle Select/Clear Selection button click
-  if (selectButton) {
-    selectButton.addEventListener('click', () => {
-      console.log('Minimize button clicked');
-      if (!isSelected) {
-        // Start selection
-        window.electronAPI.startSelection();
-      } else {
-        // Clear selection
-        window.electronAPI.clearSelection();
-      }
-    });
-  }
+  selectButton.addEventListener('click', () => {
+    console.log('Minimize button clicked');
+    if (!isSelected) {
+      // Start selection
+      window.electronAPI.startSelection();
+    } else {
+      // Clear selection
+      window.electronAPI.clearSelection();
+    }
+  });
+
   // Handle Play/Pause button with image switching
   playPauseButton.addEventListener('click', () => {
     console.log('Play/Pause button clicked');
@@ -108,13 +107,13 @@ function initializeControls() {
     }
 
     // Space bar to play/pause
-    // if (e.key === ' ' && ocrData) {
-    //   e.preventDefault();
-    //   if (isPlaying) {
-    //     stopReading();
-    //   } else {
-    //     startReading();
-    //   }
-    // }
+    if (e.key === ' ' && ocrData) {
+      e.preventDefault();
+      if (isPlaying) {
+        stopReading();
+      } else {
+        startReading();
+      }
+    }
   });
 }

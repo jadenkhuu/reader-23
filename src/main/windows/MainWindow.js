@@ -15,6 +15,7 @@ function createMainWindow() {
     alwaysOnTop: true,
     frame: false, // Removes window border buttons etc window frame
     transparent: true, // Makes window background transparent
+    // focusable: true,
     webPreferences: {
       preload: path.join(__dirname, '../../preload/preload.js'),
       nodeIntegration: false,
@@ -26,7 +27,7 @@ function createMainWindow() {
   mainWindow.loadFile(path.join(__dirname, '../../renderer/main/index.html'));
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools({mode: 'detach'});
+  mainWindow.webContents.openDevTools({mode: 'detach'});
 
   return mainWindow;
 }
