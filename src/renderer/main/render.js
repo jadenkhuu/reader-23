@@ -300,7 +300,7 @@ window.electronAPI.onSelectionCleared(() => {
   // selectButton.textContent = 'select';
 
   // Disable refresh and replay buttons when no selection
-  replayButton.disabled = true;
+  // replayButton.disabled = true;
 
   // Reset OCR data and reading state
   ocrData = null;

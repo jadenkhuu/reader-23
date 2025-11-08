@@ -28,7 +28,7 @@ const IPC_CHANNELS = {
 // Window Configuration
 const WINDOW_CONFIG = {
   MAIN: {
-    WIDTH: 417,
+    WIDTH: 416,
     HEIGHT: 680,
     RESIZABLE: false,
     MAXIMIZABLE: false,
