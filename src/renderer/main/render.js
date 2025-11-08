@@ -9,7 +9,7 @@ let currentParagraphIndex = 0;
 let currentLineIndex = 0;
 let currentWordIndex = 0;
 let readingInterval = null;
-let wordsPerMinute = 250; // Default WPM (adjustable in code for now)
+let wordsPerMinute = 300; // Default WPM (adjustable in code for now)
 
 // Get word at specific position (helper function)
 function getWordAt(paragraphIdx, lineIdx, wordIdx) {
@@ -42,7 +42,6 @@ function getPreviousWord() {
 
   return null;
 }
-
 // Get next word
 function getNextWord() {
   if (!ocrData || !ocrData.paragraphs.length) return null;
@@ -65,12 +64,10 @@ function getNextWord() {
 
   return null;
 }
-
 // Calculate delay between words based on WPM
 function getWordDelay() {
   return (60 / wordsPerMinute) * 1000; // Convert to milliseconds
 }
-
 // Get current word from OCR data
 function getCurrentWord() {
   if (!ocrData || !ocrData.paragraphs.length) return null;
@@ -83,7 +80,6 @@ function getCurrentWord() {
 
   return line.words[currentWordIndex];
 }
-
 // Advance to next word
 function advanceWord() {
   if (!ocrData || !ocrData.paragraphs.length) return false;

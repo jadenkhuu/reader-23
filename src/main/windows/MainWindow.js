@@ -12,7 +12,7 @@ function createMainWindow() {
     resizable: WINDOW_CONFIG.MAIN.RESIZABLE,
     maximizable: WINDOW_CONFIG.MAIN.MAXIMIZABLE,
     fullscreenable: WINDOW_CONFIG.MAIN.FULLSCREENABLE,
-    alwaysOnTop: WINDOW_CONFIG.MAIN.ALWAYS_ON_TOP,
+    alwaysOnTop: true,
     frame: false, // Removes window border buttons etc window frame
     transparent: true, // Makes window background transparent
     webPreferences: {

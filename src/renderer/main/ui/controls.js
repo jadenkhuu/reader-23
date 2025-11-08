@@ -1,10 +1,11 @@
 // Get button references
-const selectButton = document.getElementById('select-button');
-const replayButton = document.getElementById('replay-button');
-const nextButton = document.getElementById('next-button');
 
 const playPauseButton = document.getElementById('play-pause-button');
 const playPauseIcon = document.getElementById('play-pause-icon');
+
+const selectButton = document.getElementById('select-button');
+const replayButton = document.getElementById('replay-button');
+const nextButton = document.getElementById('next-button');
 
 // Get WPM control references
 const wpmSlider = document.getElementById('wpm-slider');
@@ -13,28 +14,21 @@ const wpmInput = document.getElementById('wpm-input');
 // Initialize controls
 function initializeControls() {
   // Handle Select/Clear Selection button click
-  selectButton.addEventListener('click', () => {
-    if (!isSelected) {
-      // Start selection
-      window.electronAPI.startSelection();
-    } else {
-      // Clear selection
-      window.electronAPI.clearSelection();
-    }
-  });
-
-  // Handle Replay button click
-  replayButton.addEventListener('click', () => {
-    if (!ocrData) {
-      updateDisplayStatus('Please select an area first', 'error');
-      return;
-    }
-
-    replayLines();
-  });
-
+  if (selectButton) {
+    selectButton.addEventListener('click', () => {
+      console.log('Minimize button clicked');
+      if (!isSelected) {
+        // Start selection
+        window.electronAPI.startSelection();
+      } else {
+        // Clear selection
+        window.electronAPI.clearSelection();
+      }
+    });
+  }
   // Handle Play/Pause button with image switching
   playPauseButton.addEventListener('click', () => {
+    console.log('Play/Pause button clicked');
     if (!ocrData) {
       updateDisplayStatus('Please select an area first', 'error');
       return;
@@ -55,6 +49,7 @@ function initializeControls() {
 
   // Handle Next button
   nextButton.addEventListener('click', () => {
+    console.log('Next button clicked');
     if (!ocrData) {
       updateDisplayStatus('Please select an area first', 'error');
       return;
@@ -113,13 +108,13 @@ function initializeControls() {
     }
 
     // Space bar to play/pause
-    if (e.key === ' ' && ocrData) {
-      e.preventDefault();
-      if (isPlaying) {
-        stopReading();
-      } else {
-        startReading();
-      }
-    }
+    // if (e.key === ' ' && ocrData) {
+    //   e.preventDefault();
+    //   if (isPlaying) {
+    //     stopReading();
+    //   } else {
+    //     startReading();
+    //   }
+    // }
   });
 }

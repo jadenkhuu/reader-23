@@ -185,21 +185,7 @@ img {
   appearance: none;
   width: 16px;
   height: 16px;
-  background-image: url('assets/slider-handle.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  cursor: pointer;
-  /* Remove default styling */
-  border: none;
-  border-radius: 0;
-}
-
-/* Firefox - Custom Thumb */
-#wpm-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  background-image: url('assets/slider-handle.png');
+  background-image: url('assets/slider_btn.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -250,6 +236,7 @@ img {
   cursor: pointer;
   z-index: 5;
   padding: 0;
+  pointer-events: auto;
 }
 
 /* Select button (dark square above screen) */
