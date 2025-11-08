@@ -40,5 +40,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   closeWindow: () => {
     console.log('[Preload] Sending window-close');
     ipcRenderer.send('window-close');
+  },
+
+  togglePinned: () => {
+    console.log('[Preload] Sending window-toggle-pinned');
+    ipcRenderer.send('window-toggle-pinned');
   }
 });

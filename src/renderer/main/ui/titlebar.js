@@ -5,9 +5,19 @@
 
 function initializeTitlebar() {
   // Get button references
+  const pinBtn = document.getElementById('pin-btn');
   const minimizeBtn = document.getElementById('minimize-btn');
   const maximizeBtn = document.getElementById('maximize-btn');
   const closeBtn = document.getElementById('close-btn');
+
+  // Toggle pinned window
+  if (pinBtn) {
+    pinBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent event bubbling
+      console.log('Pin button clicked');
+      window.electronAPI.togglePinned();
+    });
+  }
 
   // Minimize button
   if (minimizeBtn) {
@@ -15,15 +25,6 @@ function initializeTitlebar() {
       e.stopPropagation(); // Prevent event bubbling
       console.log('Minimize button clicked');
       window.electronAPI.minimizeWindow();
-    });
-  }
-
-  // Maximize/Restore button
-  if (maximizeBtn) {
-    maximizeBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      console.log('Maximize button clicked');
-    //   window.electronAPI.toggleMaximize();
     });
   }
 

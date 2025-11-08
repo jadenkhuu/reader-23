@@ -12,35 +12,6 @@ let selectionState = {
   coordinates: null
 };
 
-// function handleRefreshOCR() {
-//   const mainWindow = getMainWindow();
-//   if (!selectionState.isSelected || !selectionState.coordinates) {
-//     console.error('No selection to refresh');
-//     mainWindow.webContents.send(IPC_CHANNELS.OCR_ERROR, 'No selection to refresh');
-//     return;
-//   }
-//   // Re-run OCR with existing coordinates
-
-//   // Ensure border window stays on top
-//   mainWindow.setAlwaysOnTop(true, 'floating');
-
-//   // Notify main window that selection is stored
-//   mainWindow.webContents.send(IPC_CHANNELS.SELECTION_STORED, coordinates);
-
-//   // Start OCR processing automatically
-//   try {
-//     const screenshot = await captureSelectedArea(coordinates, mainWindow);
-//     const ocrResult = await processOCR(screenshot, coordinates, mainWindow);
-
-//     // Send OCR result to renderer
-//     mainWindow.webContents.send(IPC_CHANNELS.OCR_COMPLETE, ocrResult);
-//     console.log('OCR result sent to renderer');
-//   } catch (error) {
-//     console.error('Error in OCR pipeline:', error);
-//     mainWindow.webContents.send(IPC_CHANNELS.OCR_ERROR, error.message);
-//   }
-// }
-
 function registerIPCHandlers() {
   // Handle start selection request
   ipcMain.on(IPC_CHANNELS.START_SELECTION, () => {
@@ -160,6 +131,18 @@ function registerIPCHandlers() {
     if (mainWindow) {
       mainWindow.close();
       console.log('[Main] Window closed');
+    } else {
+      console.error('[Main] Main window not found');
+    }
+  });
+  // Toggle pinned window
+  ipcMain.on('window-toggle-pinned', () => {
+    console.log('[Main] Toggle pinned window requested');
+    const mainWindow = getMainWindow();
+    if (mainWindow) {
+      const isAlwaysOnTop = mainWindow.isAlwaysOnTop();
+      mainWindow.setAlwaysOnTop(!isAlwaysOnTop, 'floating');
+      console.log(`[Main] Window pinned state set to ${!isAlwaysOnTop}`);
     } else {
       console.error('[Main] Main window not found');
     }

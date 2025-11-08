@@ -12,6 +12,20 @@ DEBUG STYLES
   border: 2px solid green !important;
 } */
 
+/* #wpm-control {
+  background-color: rgba(0, 0, 255, 0.3) !important;
+  border: 2px solid blue !important;
+}
+
+#wpm-slider {
+  background-color: rgba(0, 0, 255, 0.3) !important;
+  border: 2px solid blue !important;
+} */
+/*
+#wpm-input {
+  background-color: rgba(0, 0, 255, 0.3) !important;
+  border: 2px solid blue !important;
+} */
 
 /* ============================================
    RESET & BASE
@@ -100,6 +114,10 @@ img {
   cursor: pointer;
   -webkit-app-region: no-drag;
 }
+#pin-btn-disabled {
+  display: none;
+}
+
 /* ============================================
    DISPLAY AREA
    ============================================ */
@@ -157,34 +175,34 @@ img {
 
 #wpm-control {
   position: absolute;
-  top: 312px;
-  left: 20px;
-  width: 320px;
-  height: 24px;
+  top: 308px;
+  left: 18px;
+  width: 380px;
+  /* height: 56px; */
   z-index: 5;
 
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  justify-content: right;
 }
 
 /* Custom styled range slider */
 #wpm-slider {
   flex: 1;
   height: 6px;
+  width: 380px;
   background: transparent;
   outline: none;
   -webkit-appearance: none;
   appearance: none;
   cursor: pointer;
 }
-
 /* WebKit (Chrome, Safari, Edge) - Custom Thumb */
 #wpm-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 40px;
+  height: 24px;
   background-image: url('assets/slider_btn.png');
   background-size: contain;
   background-repeat: no-repeat;
@@ -194,13 +212,11 @@ img {
   border: none;
   border-radius: 0;
 }
-
 /* Remove default track styling */
 #wpm-slider::-webkit-slider-runnable-track {
   background: transparent;
   border: none;
 }
-
 #wpm-slider::-moz-range-track {
   background: transparent;
   border: none;
@@ -208,16 +224,23 @@ img {
 
 /* WPM Number Input */
 #wpm-input {
-  width: 55px;
-  height: 22px;
-  padding: 2px 4px;
-  border: 1px solid #999;
+  width: 56px;
+  height: 28px;
+  padding: 12px;
+  border: 0px solid #999;
+  margin: 0 0 0 4px;
   border-radius: 3px;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   text-align: center;
   color: #333;
   background-color: #fff;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 #wpm-input:focus {

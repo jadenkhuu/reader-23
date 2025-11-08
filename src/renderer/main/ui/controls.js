@@ -58,7 +58,7 @@ function initializeControls() {
   });
 
   // Handle Prev button
-  nextButton.addEventListener('click', () => {
+  prevButton.addEventListener('click', () => {
     console.log('Prev button clicked');
     if (!ocrData) {
       updateDisplayStatus('Please select an area first', 'error');
