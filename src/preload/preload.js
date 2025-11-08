@@ -8,7 +8,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Send events to main process
   startSelection: () => ipcRenderer.send('start-selection'),
   clearSelection: () => ipcRenderer.send('clear-selection'),
-  refreshOCR: () => ipcRenderer.send('refresh-ocr'), // NEW: Refresh OCR with existing selection
+  refreshOCR: () => ipcRenderer.send('refresh-ocr'),
 
   // Receive events from main process
   onSelectionStored: (callback) => {
@@ -30,5 +30,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
   onOCRProgress: (callback) => {
     ipcRenderer.on('ocr-progress', (event, progress) => callback(progress));
+  },
+
+  minimizeWindow: () => {
+    console.log('[Preload] Sending window-minimize');
+    ipcRenderer.send('window-minimize');
+  },
+
+  closeWindow: () => {
+    console.log('[Preload] Sending window-close');
+    ipcRenderer.send('window-close');
   }
 });

@@ -12,7 +12,9 @@ function createMainWindow() {
     resizable: WINDOW_CONFIG.MAIN.RESIZABLE,
     maximizable: WINDOW_CONFIG.MAIN.MAXIMIZABLE,
     fullscreenable: WINDOW_CONFIG.MAIN.FULLSCREENABLE,
-    alwaysOnTop: WINDOW_CONFIG.MAIN.ALWAYS_ON_TOP,
+    alwaysOnTop: true,
+    frame: false, // Removes window border buttons etc window frame
+    transparent: true, // Makes window background transparent
     webPreferences: {
       preload: path.join(__dirname, '../../preload/preload.js'),
       nodeIntegration: false,
@@ -24,7 +26,7 @@ function createMainWindow() {
   mainWindow.loadFile(path.join(__dirname, '../../renderer/main/index.html'));
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools({mode: 'detach'});
 
   return mainWindow;
 }

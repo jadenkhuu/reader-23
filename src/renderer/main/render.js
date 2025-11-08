@@ -9,7 +9,7 @@ let currentParagraphIndex = 0;
 let currentLineIndex = 0;
 let currentWordIndex = 0;
 let readingInterval = null;
-let wordsPerMinute = 250; // Default WPM (adjustable in code for now)
+let wordsPerMinute = 300; // Default WPM (adjustable in code for now)
 
 // Get word at specific position (helper function)
 function getWordAt(paragraphIdx, lineIdx, wordIdx) {
@@ -42,7 +42,6 @@ function getPreviousWord() {
 
   return null;
 }
-
 // Get next word
 function getNextWord() {
   if (!ocrData || !ocrData.paragraphs.length) return null;
@@ -65,12 +64,10 @@ function getNextWord() {
 
   return null;
 }
-
 // Calculate delay between words based on WPM
 function getWordDelay() {
   return (60 / wordsPerMinute) * 1000; // Convert to milliseconds
 }
-
 // Get current word from OCR data
 function getCurrentWord() {
   if (!ocrData || !ocrData.paragraphs.length) return null;
@@ -83,7 +80,6 @@ function getCurrentWord() {
 
   return line.words[currentWordIndex];
 }
-
 // Advance to next word
 function advanceWord() {
   if (!ocrData || !ocrData.paragraphs.length) return false;
@@ -135,6 +131,7 @@ function advanceWord() {
 // Start reading words
 function startReading() {
   if (isPlaying) return; // Already playing
+
   if (!ocrData || !ocrData.paragraphs.length) {
     updateDisplayStatus('No text to read', 'error');
     return;
@@ -152,7 +149,11 @@ function startReading() {
   }
 
   isPlaying = true;
-  playPauseButton.textContent = '❚❚';
+  const playPauseIcon = document.getElementById('play-pause-icon');
+  if (playPauseIcon) {
+    playPauseIcon.src = 'assets/pause_btn.png';
+    playPauseIcon.alt = 'pause';
+  }
 
   // Display current word with context immediately
   const currentWord = getCurrentWord();
@@ -183,7 +184,13 @@ function stopReading() {
   if (!isPlaying) return;
 
   isPlaying = false;
-  playPauseButton.textContent = '▶';
+
+  // Update button icon
+  const playPauseIcon = document.getElementById('play-pause-icon');
+  if (playPauseIcon) {
+    playPauseIcon.src = 'assets/play_btn.png';
+    playPauseIcon.alt = 'play';
+  }
 
   if (readingInterval) {
     clearInterval(readingInterval);
@@ -274,7 +281,7 @@ function replayLines() {
 window.electronAPI.onSelectionStored((coordinates) => {
   isSelected = true;
   selectionCoordinates = coordinates;
-  selectButton.textContent = 'clear';
+  // selectButton.textContent = 'clear';
 
   // Update status to show OCR is starting
   updateDisplayStatus('Processing text...', 'processing');
@@ -286,10 +293,10 @@ window.electronAPI.onSelectionStored((coordinates) => {
 window.electronAPI.onSelectionCleared(() => {
   isSelected = false;
   selectionCoordinates = null;
-  selectButton.textContent = 'select';
+  // selectButton.textContent = 'select';
 
   // Disable refresh and replay buttons when no selection
-  replayButton.disabled = true;
+  // replayButton.disabled = true;
 
   // Reset OCR data and reading state
   ocrData = null;
@@ -339,7 +346,7 @@ window.electronAPI.onOCRComplete((data) => {
   // Enable play/pause, next, and replay buttons
   playPauseButton.disabled = false;
   nextButton.disabled = false;
-  replayButton.disabled = false;
+  // replayButton.disabled = false;
 });
 
 // Listen for OCR error event
