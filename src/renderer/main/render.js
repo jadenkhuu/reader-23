@@ -11,6 +11,19 @@ let currentWordIndex = 0;
 let readingInterval = null;
 let wordsPerMinute = 250; // Default WPM (adjustable in code for now)
 
+function isSentenceEnder(word) {
+  if (!word || !word.text) return false;
+  
+  const text = word.text.trim();
+  const lastChar = text[text.length - 1];
+  
+  // Check for sentence-ending punctuation
+  return lastChar === '.' || 
+         lastChar === '?' || 
+         lastChar === '!' || 
+         lastChar === '…'; // ellipsis
+}
+
 // Get word at specific position (helper function)
 function getWordAt(paragraphIdx, lineIdx, wordIdx) {
   if (!ocrData || !ocrData.paragraphs.length) return null;
@@ -65,8 +78,15 @@ function getNextWord() {
   return null;
 }
 // Calculate delay between words based on WPM
-function getWordDelay() {
-  return (60 / wordsPerMinute) * 1000; // Convert to milliseconds
+function getWordDelay(word = null) {
+  const baseDelay = (60 / wordsPerMinute) * 1000; // Convert to milliseconds
+  
+  // If this word ends a sentence, multiply delay by 5
+  if (word && isSentenceEnder(word)) {
+    return baseDelay * 5;
+  }
+  
+  return baseDelay;
 }
 // Get current word from OCR data
 function getCurrentWord() {
@@ -129,6 +149,7 @@ function advanceWord() {
 }
 
 // Start reading words
+// Start reading words
 function startReading() {
   if (isPlaying) return; // Already playing
 
@@ -164,21 +185,33 @@ function startReading() {
     displayWord(currentWord, prevWord, nextWord);
   }
 
-  // Start interval for next words
-  readingInterval = setInterval(() => {
-    const hasNext = advanceWord();
-    if (hasNext) {
-      const currentWord = getCurrentWord();
-      const prevWord = getPreviousWord();
-      const nextWord = getNextWord();
+  // Function to schedule next word with appropriate delay
+  function scheduleNextWord() {
+    const currentWord = getCurrentWord();
+    const delay = getWordDelay(currentWord);
+    
+    readingInterval = setTimeout(() => {
+      const hasNext = advanceWord();
+      if (hasNext) {
+        const currentWord = getCurrentWord();
+        const prevWord = getPreviousWord();
+        const nextWord = getNextWord();
 
-      if (currentWord) {
-        displayWord(currentWord, prevWord, nextWord);
+        if (currentWord) {
+          displayWord(currentWord, prevWord, nextWord);
+        }
+        
+        // Schedule the next word
+        scheduleNextWord();
       }
-    }
-  }, getWordDelay());
+    }, delay);
+  }
+
+  // Start the scheduling
+  scheduleNextWord();
 }
 
+// Stop reading words
 // Stop reading words
 function stopReading() {
   if (!isPlaying) return;
@@ -193,22 +226,27 @@ function stopReading() {
   }
 
   if (readingInterval) {
-    clearInterval(readingInterval);
+    clearTimeout(readingInterval); // Changed from clearInterval
     readingInterval = null;
   }
 }
-
+// Restart reading with new WPM
 // Restart reading with new WPM
 function restartReading() {
   if (!isPlaying) return;
 
-  // Clear old interval
+  // Clear old timeout
   if (readingInterval) {
-    clearInterval(readingInterval);
+    clearTimeout(readingInterval);
+    readingInterval = null;
   }
 
-  // Start new interval with updated WPM
-  readingInterval = setInterval(() => {
+  // Restart the reading loop
+  // (The next scheduled word will use the new WPM automatically)
+  const currentWord = getCurrentWord();
+  const delay = getWordDelay(currentWord);
+  
+  readingInterval = setTimeout(() => {
     const hasNext = advanceWord();
     if (hasNext) {
       const currentWord = getCurrentWord();
@@ -218,10 +256,31 @@ function restartReading() {
       if (currentWord) {
         displayWord(currentWord, prevWord, nextWord);
       }
-    }
-  }, getWordDelay());
-}
+      
+      // Continue scheduling
+      function scheduleNextWord() {
+        const currentWord = getCurrentWord();
+        const delay = getWordDelay(currentWord);
+        
+        readingInterval = setTimeout(() => {
+          const hasNext = advanceWord();
+          if (hasNext) {
+            const currentWord = getCurrentWord();
+            const prevWord = getPreviousWord();
+            const nextWord = getNextWord();
 
+            if (currentWord) {
+              displayWord(currentWord, prevWord, nextWord);
+            }
+            scheduleNextWord();
+          }
+        }, delay);
+      }
+      
+      scheduleNextWord();
+    }
+  }, delay);
+}
 // Reset reading position to beginning
 function resetReading() {
   currentParagraphIndex = 0;

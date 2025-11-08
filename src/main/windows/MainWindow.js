@@ -27,7 +27,7 @@ function createMainWindow() {
   mainWindow.loadFile(path.join(__dirname, '../../renderer/main/index.html'));
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools({mode: 'detach'});
+  mainWindow.webContents.openDevTools({mode: 'detach'});
 
   return mainWindow;
 }
