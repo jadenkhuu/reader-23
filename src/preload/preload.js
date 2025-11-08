@@ -30,5 +30,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
   onOCRProgress: (callback) => {
     ipcRenderer.on('ocr-progress', (event, progress) => callback(progress));
+  },
+
+  minimizeWindow: () => {
+    console.log('[Preload] Sending window-minimize');
+    ipcRenderer.send('window-minimize');
+  },
+
+  closeWindow: () => {
+    console.log('[Preload] Sending window-close');
+    ipcRenderer.send('window-close');
   }
 });

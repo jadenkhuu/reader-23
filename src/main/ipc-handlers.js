@@ -112,7 +112,31 @@ function registerIPCHandlers() {
       mainWindow.webContents.send(IPC_CHANNELS.OCR_ERROR, error.message);
     }
   });
+  // minimize window
+  ipcMain.on('window-minimize', () => {
+    console.log('[Main] Minimize window requested');
+    const mainWindow = getMainWindow();
+    if (mainWindow) {
+      mainWindow.minimize();
+      console.log('[Main] Window minimized');
+    } else {
+      console.error('[Main] Main window not found');
+    }
+  });
+  // Close window
+  ipcMain.on('window-close', () => {
+    console.log('[Main] Close window requested');
+    const mainWindow = getMainWindow();
+    if (mainWindow) {
+      mainWindow.close();
+      console.log('[Main] Window closed');
+    } else {
+      console.error('[Main] Main window not found');
+    }
+  });
 }
+
+
 
 module.exports = {
   registerIPCHandlers

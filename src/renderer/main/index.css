@@ -1,3 +1,18 @@
+
+/* ===========================
+DEBUG STYLES
+===============================*/
+.control-btn {
+  background-color: rgba(255, 0, 0, 0.3) !important;
+  border: 2px solid red !important;
+}
+
+.center-btn {
+  background-color: rgba(0, 255, 0, 0.3) !important;
+  border: 2px solid green !important;
+}
+
+
 /* ============================================
    RESET & BASE
    ============================================ */
@@ -84,17 +99,7 @@ img {
   border: none;
   cursor: pointer;
   -webkit-app-region: no-drag;
-  transition: background-color 0.1s;
 }
-
-.titlebar-btn:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-}
-
-.titlebar-btn:active {
-  background-color: rgba(255, 255, 255, 0.25);
-}
-
 /* ============================================
    DISPLAY AREA
    ============================================ */
@@ -245,41 +250,41 @@ img {
   cursor: pointer;
   z-index: 5;
   padding: 0;
-  transition: opacity 0.1s;
 }
 
 /* Select button (dark square above screen) */
 .square-btn {
-  top: 342px;
-  left: 188px;
-  width: 40px;
-  height: 40px;
+  top: 348px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 84px;
+  height: 84px;
 }
 
 /* iPod wheel buttons */
 .left-btn {
   /* Double arrow left - previous */
-  top: 492px;
-  left: 88px;
-  width: 56px;
-  height: 56px;
+  top: 458px;
+  left: 56px;
+  width: 84px;
+  height: 84px;
 }
 
 .right-btn {
   /* Double arrow right - next */
-  top: 492px;
-  right: 88px;
-  width: 56px;
-  height: 56px;
+  top: 458px;
+  right: 56px;
+  width: 84px;
+  height: 84px;
 }
 
 .bottom-btn {
   /* Circular arrow - refresh */
-  bottom: 56px;
+  bottom: 28px;
   left: 50%;
   transform: translateX(-50%);
-  width: 56px;
-  height: 56px;
+  width: 84px;
+  height: 84px;
 }
 
 /* ============================================
@@ -288,12 +293,12 @@ img {
 
 .center-btn {
   /* Center of iPod wheel */
-  top: 485px;
+  top: 458px;
   left: 50%;
   transform: translateX(-50%);
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
+  width: 84px;
+  height: 84px;
+
   /* Container for the image */
   display: flex;
   align-items: center;
@@ -303,8 +308,8 @@ img {
 
 /* The actual play/pause icon image */
 #play-pause-icon {
-  width: 100%;
-  height: 100%;
+  width:48px;
+  height: 56px;
   display: block;
   pointer-events: none; /* Clicks go to button, not image */
 }
