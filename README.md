@@ -17,7 +17,7 @@ Some integrated features include an adjustable words per minute pace (WPM), visu
 This app aims to assist users who typically have trouble keeping track of where they are up to when reading traditional paragraphs. This application can also help readers who want to consume text based content more quickly an efficiently. This approach reduces cognitive load and eye strain, making digital content more accessible for users with reading difficulties, dyslexia, ADHD, or visual processing challenges. 
 
 <img width="263" height="393" alt="Whole App" src="https://github.com/user-attachments/assets/81dc247e-cdff-457b-a61f-0800a06f21b3" />
-<img src="https://i.imgur.com/6N2ag8Z.gif" height="393" alt="Demo Animation" />
+![demo](https://i.imgur.com/6N2ag8Z.gif)
 
 ### How to use
 
@@ -25,7 +25,9 @@ When you first run the application the interface is comprised of 3 main sections
 
 First, familiarise yourself with the control buttons section locate at the lower half of the application. 
 
+
 <img width="392" height="344" alt="main buttons Image" src="https://github.com/user-attachments/assets/63093187-7683-43b0-9771-7da0e0dd0cc2" />
+
 
 - **Top button** is **'select screen'** to select a section of the screen to scan for text, leaving a persistent green border to show the selection
   - While selecting, you can press ESC or right-click to cancel the selection
