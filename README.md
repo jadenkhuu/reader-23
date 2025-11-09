@@ -18,7 +18,7 @@ This app aims to assist readers who typically have trouble keeping track of wher
 
 <img width="526" height="786" alt="Whole App" src="https://github.com/user-attachments/assets/81dc247e-cdff-457b-a61f-0800a06f21b3" />
 
-##### How to use
+### How to use
 
 When you first run the application the interface is comprised of 3 main sections. The title bar, the main display, and the control buttons.
 
@@ -35,7 +35,7 @@ First, familiarise yourself with the control buttons section locate at the lower
   - The main use of this is to streamline the user experience
   - Eg. suppose the user is reading a page of a PDF and they have made a selection on screen. They scroll down to the next page to continue reading. Instead of reselecting the exact same area, the user can recycle the existing selection and click refresh to scan for new text.
 
-##### Typical user flow
+### Typical user flow
 1. Click the 'select screen' button to select an area of the current screen to scan for text.
 2. Once the screen is scanned, WPM (words per minute) is adjustable to the users reading pace.
 3. Upon successful scanning, the display area will show the first word and the next word in the sequence
@@ -53,13 +53,13 @@ Functions and Features in depth
 
 <img width="670" height="764" alt="Whole App example" src="https://github.com/user-attachments/assets/c833af1a-a3ad-4e6f-bb28-b4788db12f1f" />
 
-##### Title Bar
+### Title Bar
 
 The title bar is generally comprised of the same elements found in typical desktop applications. A title, and buttons for minimising, maximising, and closing the app. A unique button is the **'thumbpin button'** which allows the app to be pinned to always stay on top of other windows. When it is enaabled, it is indicated by the being green, and it will turn grey when disabled.
 
 <img width="44" height="36" alt="ipod pixel main-Sheet" src="https://github.com/user-attachments/assets/af87a402-8d54-4d78-90b9-d127e2bc81ca" />
 
-##### Main Display
+### Main Display
 
 The main display will display text sequentially at a rate based on the set WPM (Words per minute) which is adjustable by the slider right below it. 
 
@@ -67,7 +67,7 @@ The text iteration simulates generally speaking and reading patterns, providing 
 
 This allows the reading to both be quick and efficient without sacrificing the dynamic nature of typical reading, where punctuation can dictate how a sentence is read.
 
-##### Control Buttons
+### Control Buttons
 
 The control buttons are in the shape of a circle similar to that of an Apple iPod. It can be divided into 5 sections. 
 
