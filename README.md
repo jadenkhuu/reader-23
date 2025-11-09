@@ -1,4 +1,4 @@
-read-23
+reader-23
 -----
 
 *Team: [Jaden Khuu]*
@@ -8,7 +8,7 @@ read-23
 Description
 -----
 
-read-23 is an application which aims to address the challenge of visual tracking in traditional paragraph and text formatting to assist users in reading and comprehension. It is built on the scientific research method called Rapid serial visual presentation (RSVP) which involves presenting a series of visual stimuli, such as words or images, one after another in quick succession at the same location.
+reader-23 is an application which aims to address the challenge of visual tracking in traditional paragraph and text formatting to assist users in reading and comprehension. It is built on the scientific research method called Rapid serial visual presentation (RSVP) which involves presenting a series of visual stimuli, such as words or images, one after another in quick succession at the same location.
 
 Building upon an existing prototype, the app will iterating through each word in a sentence, displaying them sequentially at a centralised position, increasing the users ability to read words quickly.
 
