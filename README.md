@@ -14,7 +14,7 @@ Building upon an existing prototype, the app will iterating through each word in
 
 Some integrated features include an adjustable words per minute pace (WPM), visual tracking of words through sentence highlighting, and sentence tracking/navigating through a paragraph while reading similarly to video scrubbing.
 
-This app aims to assist readers who typically have trouble keeping track of where they are up to when reading traditional paragraphs or want to consume text based content quickly. This approach reduces cognitive load and eye strain, making digital content more accessible for users with reading difficulties, dyslexia, ADHD, or visual processing challenges.
+This app aims to assist users who typically have trouble keeping track of where they are up to when reading traditional paragraphs. This application can also help readers who want to consume text based content more quickly an efficiently. This approach reduces cognitive load and eye strain, making digital content more accessible for users with reading difficulties, dyslexia, ADHD, or visual processing challenges. 
 
 <img width="526" height="786" alt="Whole App" src="https://github.com/user-attachments/assets/81dc247e-cdff-457b-a61f-0800a06f21b3" />
 
