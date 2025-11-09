@@ -12,13 +12,14 @@ Description
 
 reader-23 is an application which aims to address the challenge of visual tracking in traditional paragraph and text formatting to assist users in reading and comprehension. It is built on the scientific research method called Rapid serial visual presentation (RSVP) which involves presenting a series of visual stimuli, such as words or images, one after another in quick succession at the same location. This approach to present visual stimuli should improve the users ability to focus and heighten their ability to consume content
 
-Building upon an existing prototype, the app will iterate through words in a sentence and pargraph, displaying them sequentially at a centralised position, increasing the users ability to read words quickly. This app is not meant to replace reading entirely, the intention of this application is to be used along side traditional reading as a floating helper.
-
-This app aims to assist users who typically have trouble keeping track of where they are up to when reading traditional paragraphs. This application can also help readers who want to consume text based content more quickly and efficiently. This approach reduces cognitive load and eye strain, making digital content more accessible for users with reading difficulties, dyslexia, ADHD, or visual processing challenges. 
+Building upon an existing prototype, the app will iterate through words in a sentence and paragraph, displaying them sequentially at a centralised position, increasing the users ability to read words quickly. This app is not meant to replace reading entirely, the intention of this application is to be used along side traditional reading as a floating helper.
 
 <div align="center">
-  <video src="https://github.com/user-attachments/assets/aa59ee7b-593c-4250-8091-f1f0f222c017" width="600" controls autoplay loop muted playsinline></video>
+  <video src="https://github.com/user-attachments/assets/259c33aa-b585-4ee2-b45f-388ee7e1b6b5" width="600" controls autoplay loop muted playsinline></video>
 </div>
+
+This app aims to assist users who typically have trouble keeping track of their reading progress with traditional formatted paragraphs. This app can also help readers who want to consume text-based content more quickly and efficiently. This approach reduces cognitive load and eye strain, making digital content more accessible for users who may have reading difficulties, dyslexia, ADHD, or visual processing challenges. 
+
 
 How to use
 -----
@@ -28,8 +29,7 @@ When you first run the application the interface is comprised of 3 main sections
 First, familiarise yourself with the control buttons section locate at the lower half of the application. 
 
 <div align="center">
-  <img width="263" height="393" alt="Whole App" src="https://github.com/user-attachments/assets/81dc247e-cdff-457b-a61f-0800a06f21b3" />
-  
+  <img width="263" height="393" alt="Whole App" src="https://github.com/user-attachments/assets/81dc247e-cdff-457b-a61f-0800a06f21b3" />  
   <img width="196" height="172" alt="main buttons Image" src="https://github.com/user-attachments/assets/63093187-7683-43b0-9771-7da0e0dd0cc2" />
 </div>
 
@@ -92,18 +92,12 @@ The **bottom button** is the 'refresh button' which only operates if the user ha
 Design
 -----
 
-##### Installation
+##### Installation and how to use
 
 To begin, clone the repository and install dependencies by navigating to the app folder in the terminal and running:
 
 ```
-npm install
-```
-
-Start the app by running:
-
-```
-npm run dev
+npm install && npm run make
 ```
 
 Software Architecture
