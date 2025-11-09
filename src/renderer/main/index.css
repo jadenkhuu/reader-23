@@ -93,6 +93,14 @@ img {
 /* ============================================
    TITLEBAR
    ============================================ */
+#app-title {
+  position: absolute;
+  padding: 11px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  z-index: 11;
+}
 
 #custom-titlebar {
   position: absolute;
@@ -152,7 +160,7 @@ img {
 }
 
 #display-text.word-display {
-  font-size: 22px;
+  font-size: 23px;
   font-weight: lighter;
 }
 
@@ -166,12 +174,12 @@ img {
 
 .word-previous,
 .word-next {
-  font-size: 12px;
-  opacity: 0.3;
+  font-size: 10px;
+  opacity: 0.25;
 }
 
 .word-current {
-  font-size: 22px;
+  font-size: 23px;
 }
 
 #start-title {

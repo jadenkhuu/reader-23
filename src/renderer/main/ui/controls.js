@@ -127,13 +127,17 @@ function initializeControls() {
     }
 
     // Space bar to play/pause
-    if (e.key === ' ' && ocrData) {
+    if ((e.key === ' ' || e.key === 'ArrowDown') && ocrData) {
       e.preventDefault();
       if (isPlaying) {
         stopReading();
       } else {
         startReading();
       }
+    } else if (e.key === 'ArrowRight' && ocrData) {
+      nextLine();
+    } else if (e.key === 'ArrowLeft' && ocrData) {
+      prevLine();
     }
   });
 }

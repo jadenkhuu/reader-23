@@ -11,6 +11,10 @@ let currentWordIndex = 0;
 let readingInterval = null;
 let wordsPerMinute = 250; // Default WPM (adjustable in code for now)
 
+
+// ===== Helper functions =====
+// - Determining punctuation and word based reading logic
+
 function isSentenceEnder(word) {
   if (!word || !word.text) return false;
 
@@ -23,7 +27,7 @@ function isSentenceEnder(word) {
          lastChar === '!' ||
          lastChar === '…';
 }
-function isCommaEnder(word) {
+function suffixWordFilter(word) {
   if (!word || !word.text) return false;
   const text = word.text.trim();
   const lastChar = text[text.length - 1];
@@ -33,8 +37,37 @@ function isCommaEnder(word) {
          lastChar === '”' ||
          lastChar === '—' ||
          lastChar === '-' ||
+         lastChar === ')' ||
+         lastChar === '(' ||
          lastChar === '’';
 }
+function prefixWordsFilter(word) {
+  if (!word || !word.text) return false;
+  const text = word.text.trim();
+  const firstChar = text[0];
+  return firstChar === '(' ||
+         firstChar === '“' ||
+         firstChar === "'" ||
+         firstChar === '’';
+}
+
+// Calculate delay of a word in terms of WPM
+function getWordDelay(word = null) {
+  const baseDelay = (60 / wordsPerMinute) * 1000; // Convert to milliseconds
+
+  // If this word ends or start in a certain way, multiply delay by x
+  if (word && isSentenceEnder(word)) {
+    return baseDelay * 4;
+  }
+  else if (word && prefixWordsFilter(word)) {
+    return baseDelay * 2;
+  }
+  else if (word && suffixWordFilter(word)) {
+    return baseDelay * 2;
+  }
+  return baseDelay;
+}
+
 
 // Get word at specific position (helper function)
 function getWordAt(paragraphIdx, lineIdx, wordIdx) {
@@ -49,6 +82,8 @@ function getWordAt(paragraphIdx, lineIdx, wordIdx) {
 
   return line.words[wordIdx];
 }
+
+// ===== Main Display and Reading Functions ===== //
 
 // Get previous word
 function getPreviousWord() {
@@ -88,19 +123,6 @@ function getNextWord() {
   }
 
   return null;
-}
-// Calculate delay between words based on WPM
-function getWordDelay(word = null) {
-  const baseDelay = (60 / wordsPerMinute) * 1000; // Convert to milliseconds
-
-  // If this word ends a sentence, multiply delay by 5
-  if (word && isSentenceEnder(word)) {
-    return baseDelay * 4;
-  } else if (word && isCommaEnder(word)) {
-    return baseDelay * 2;
-  }
-
-  return baseDelay;
 }
 // Get current word from OCR data
 function getCurrentWord() {
@@ -162,7 +184,7 @@ function advanceWord() {
   return true;
 }
 
-// Start reading words
+// ===== MAIN READING FUNCTIONS =====
 function startReading() {
   if (isPlaying) return; // Already playing
 
@@ -176,12 +198,12 @@ function startReading() {
   if (currentLineIndex === paragraph.lines.length - 1) {
     const lastLine = paragraph.lines[currentLineIndex];
     if (currentWordIndex === lastLine.words.length - 1) {
-      // We're at the last word, reset to beginning of paragraph for replay
       currentLineIndex = 0;
       currentWordIndex = 0;
     }
   }
 
+  // Start playing process
   isPlaying = true;
   const playPauseIcon = document.getElementById('play-pause-icon');
   if (playPauseIcon) {
@@ -223,7 +245,6 @@ function startReading() {
   // Start the scheduling
   scheduleNextWord();
 }
-
 // Stop reading words
 function stopReading() {
   if (!isPlaying) return;
@@ -242,7 +263,6 @@ function stopReading() {
     readingInterval = null;
   }
 }
-
 // // Restart reading with new WPM
 function restartReading() {
   if (!isPlaying) return;
@@ -278,6 +298,7 @@ function restartReading() {
   scheduleNextWord(); // Kick off the loop
 }
 
+// ===== Reading Navigation Functions ===== //
 
 // Reset reading position to beginning
 function resetReading() {
@@ -285,7 +306,6 @@ function resetReading() {
   currentLineIndex = 0;
   currentWordIndex = 0;
 }
-
 // Move to next line or paragraph
 function nextLine() {
   stopReading();
@@ -365,6 +385,8 @@ function replayLines() {
     displayWord(currentWord, prevWord, nextWord);
   }
 }
+
+// ===== IPC Event Listeners ===== //
 
 // Listen for selection stored event from main process
 window.electronAPI.onSelectionStored((coordinates) => {
