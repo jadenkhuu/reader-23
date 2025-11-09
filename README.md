@@ -20,7 +20,8 @@ This app aims to assist users who typically have trouble keeping track of where 
   <video src="https://github.com/user-attachments/assets/aa59ee7b-593c-4250-8091-f1f0f222c017" width="600" controls autoplay loop muted playsinline></video>
 </div>
 
-### How to use
+How to use
+-----
 
 When you first run the application the interface is comprised of 3 main sections. The title bar, the main display, and the control buttons.
 
