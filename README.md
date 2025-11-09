@@ -19,6 +19,7 @@ This app aims to assist readers who typically have trouble keeping track of wher
 <img width="526" height="786" alt="Whole App" src="https://github.com/user-attachments/assets/81dc247e-cdff-457b-a61f-0800a06f21b3" />
 
 ##### How to use
+
 When you first run the application the interface is comprised of 3 main sections. The title bar, the main display, and the control buttons.
 
 First, familiarise yourself with the control buttons section locate at the lower half of the application. 
@@ -30,8 +31,11 @@ First, familiarise yourself with the control buttons section locate at the lower
   - If a selection already exists, pressing the **'select screen'** button again will remove the selection and reset the app.
 - **Left and right buttons** are **'previous' and 'next'**. This has a keyboard shortcut of ArrowLeft and ArrowRight respectively.
 - **Centre button** is **'play/pause'**. This has a keyboard shortcut of "spacebar"
-- **Bottom button** is **'refresh'** to refresh the scan of an existing screen selection
+- **Bottom button** is **'refresh'** to refresh the scan of an existing screen selection.
+  - The main use of this is to streamline the user experience
+  - Eg. suppose the user is reading a page of a PDF and they have made a selection on screen. They scroll down to the next page to continue reading. Instead of reselecting the exact same area, the user can recycle the existing selection and click refresh to scan for new text.
 
+##### Typical user flow
 1. Click the 'select screen' button to select an area of the current screen to scan for text.
 2. Once the screen is scanned, WPM (words per minute) is adjustable to the users reading pace.
 3. Upon successful scanning, the display area will show the first word and the next word in the sequence
@@ -39,11 +43,12 @@ First, familiarise yourself with the control buttons section locate at the lower
 5. Keep your eyes focused on the middle of the display area to read the text and utilise RSVP.
 6. Once the paragraph is finished, the text will stop iterating and the pause button will become play again.
 7. From here, either:
-   - Advance to the next paragraph by pressing 'ArrowRight' or clicking the 'next button'
-   - Press 'Spacebar' or click 'play button' to replay the paragraph and read again
-8. 
+   - Advance to the next paragraph by pressing **'ArrowRight'** or clicking the **'next button'**
+   - Press **'Spacebar'** or click **'play button'** to replay the paragraph and read again
+   - Or, if you have finished reading the page, navigate to new content and reuse the existing selection with **'refresh button'**
 
-Functions and Features 
+
+Functions and Features in depth
 -----
 
 <img width="670" height="764" alt="Whole App example" src="https://github.com/user-attachments/assets/c833af1a-a3ad-4e6f-bb28-b4788db12f1f" />
@@ -65,14 +70,14 @@ This allows the reading to both be quick and efficient without sacrificing the d
 ##### Control Buttons
 
 The control buttons are in the shape of a circle similar to that of an Apple iPod. It can be divided into 5 sections. 
-<img width="392" height="344" alt="main buttons Image" src="https://github.com/user-attachments/assets/63093187-7683-43b0-9771-7da0e0dd0cc2" />
 
-The top button is the 'select screen' button which is the first step of using the app. The user can click the button to bring up a dark grey overlay of their current screen, prompting them to click and drag to select an area to scan for text. 
+The **top button** is the 'select screen' button which is the first step of using the app. The user can click the button to bring up a dark grey overlay of their current screen, prompting them to click and drag to select an area to scan for text. 
 
-The center button is the 'play/pause' button responsible for pausing and playing the sequence.
+The **center button **is the 'play/pause' button responsible for pausing and playing the sequence.
 
-The left and right buttons will navigate back and forth between paragraphs respectively. Alike other software, while in the middle of a paragraph, pressing the back button will bring you to the start of the current paragraph, and only go to the previous paragraph upon pressing again.
+The **left and right buttons** will navigate back and forth between paragraphs respectively. Alike other software, while in the middle of a paragraph, pressing the back button will bring you to the start of the current paragraph, and only go to the previous paragraph upon pressing again.
 
+The **bottom button** is the 'refresh button' which only operates if the user has an existing selection on the screen. The refresh button will rescan the selected area for text. This is useful if the user selects a part of the screen like a standard page size, finishes reading the page, and scrolls to the next page. They can press refresh to rescan for new text without having to remake the same selection
 
 Design
 -----
@@ -88,7 +93,7 @@ npm install
 Start the app by running:
 
 ```
-npm start
+npm run dev
 ```
 
 Software Architecture
