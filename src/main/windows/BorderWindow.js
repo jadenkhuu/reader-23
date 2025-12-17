@@ -1,6 +1,6 @@
 const { BrowserWindow, screen } = require('electron');
-const path = require('node:path');
 const { WINDOW_CONFIG } = require('../../shared/constants');
+const path = require('node:path');
 
 let borderWindow = null;
 
@@ -33,6 +33,7 @@ function createBorderWindow(coordinates, mainWindow) {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      preload: path.join(__dirname, '../../preload/preload-border.js')
     },
   });
 

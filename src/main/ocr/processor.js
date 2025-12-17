@@ -105,18 +105,32 @@ function splitWordOnSpecialChars(word) {
 // Extract structured data from Tesseract result
 function extractStructuredData(tesseractData, selectionCoords) {
   const paragraphs = [];
+  const getAbsoluteBBox = (bbox) => {
+    if (!bbox) return { x: 0, y: 0, width: 0, height: 0 };
+    
+    // Tesseract v6 usually returns { x0, y0, x1, y1 }
+    const x0 = bbox.x0 ?? bbox.left ?? 0;
+    const y0 = bbox.y0 ?? bbox.top ?? 0;
+    const x1 = bbox.x1 ?? (x0 + bbox.width) ?? 0;
+    const y1 = bbox.y1 ?? (y0 + bbox.height) ?? 0;
 
+    return {
+      x: x0 + (selectionCoords?.x || 0), 
+      y: y0 + (selectionCoords?.y || 0),
+      width: x1 - x0,
+      height: y1 - y0
+    };
+  };
   console.log('Extracting structured data...');
   console.log('Tesseract data keys:', Object.keys(tesseractData));
 
-  // Helper to process words with splitting
   const processWords = (words) => {
     const processed = [];
     words.forEach((word, wordIndex) => {
       const splitWords = splitWordOnSpecialChars({
         id: wordIndex,
         text: word.text,
-        bbox: word.bbox,
+        bbox: getAbsoluteBBox(word.bbox),
         confidence: word.confidence
       });
       processed.push(...splitWords);
@@ -124,110 +138,32 @@ function extractStructuredData(tesseractData, selectionCoords) {
     return processed;
   };
 
-  // Helper to create line data
   const createLineData = (line, lineIndex) => ({
     id: lineIndex,
-    bbox: line.bbox || { x: 0, y: 0, width: 0, height: 0 },
+    bbox: getAbsoluteBBox(line.bbox),
     text: line.text,
     confidence: line.confidence,
     words: line.words ? processWords(line.words) : []
   });
 
-  // Strategy 1: Use lines with smart paragraph detection
-  if (tesseractData.lines?.length > 0) {
-    console.log('Found', tesseractData.lines.length, 'lines');
-
-    const lineGroups = [];
-    let currentGroup = [];
-    let previousLineBottom = null;
-
-    tesseractData.lines.forEach((line) => {
-      if (!line.text || line.text.trim().length < 2) {
-        if (currentGroup.length > 0) {
-          lineGroups.push(currentGroup);
-          currentGroup = [];
-          previousLineBottom = null;
-        }
-        return;
-      }
-
-      if (previousLineBottom !== null && line.bbox) {
-        const gap = line.bbox.y0 - previousLineBottom;
-        const avgLineHeight = line.bbox.y1 - line.bbox.y0;
-
-        if (gap > avgLineHeight * OCR_CONFIG.PARAGRAPH_GAP_MULTIPLIER) {
-          if (currentGroup.length > 0) {
-            lineGroups.push(currentGroup);
-            currentGroup = [];
-          }
-        }
-      }
-
-      currentGroup.push(line);
-      if (line.bbox) previousLineBottom = line.bbox.y1;
-    });
-
-    if (currentGroup.length > 0) lineGroups.push(currentGroup);
-
-    console.log('Detected', lineGroups.length, 'paragraph groups');
-
-    lineGroups.forEach((group, groupIndex) => {
-      paragraphs.push({
-        id: `${groupIndex}`,
-        bbox: group[0].bbox || { x: 0, y: 0, width: 0, height: 0 },
-        confidence: tesseractData.confidence,
-        lines: group.map(createLineData)
-      });
-    });
-  }
-  // Strategy 2: Use blocks/paragraphs structure
-  else if (tesseractData.blocks) {
+  if (tesseractData.blocks && tesseractData.blocks.length > 0) {
     console.log('Using blocks structure');
     tesseractData.blocks.forEach((block, blockIndex) => {
-      block.paragraphs?.forEach((para, paraIndex) => {
-        paragraphs.push({
-          id: `${blockIndex}-${paraIndex}`,
-          bbox: para.bbox,
-          confidence: para.confidence,
-          lines: para.lines?.map(createLineData) || []
+      if (block.paragraphs) {
+        block.paragraphs.forEach((para, paraIndex) => {
+          paragraphs.push({
+            id: `${blockIndex}-${paraIndex}`,
+            bbox: getAbsoluteBBox(para.bbox),
+            confidence: para.confidence,
+            lines: para.lines ? para.lines.map(createLineData) : []
+          });
         });
-      });
+      }
     });
-  }
-  // Strategy 3: Plain text fallback
-  else if (tesseractData.text) {
-    console.log('Falling back to plain text parsing');
-
-    tesseractData.text
-      .split(/\n\s*\n/)
-      .filter(p => p.trim().length > 0)
-      .forEach((paraText, paraIndex) => {
-        const lines = paraText.split('\n').filter(line => line.trim().length > 0);
-
-        paragraphs.push({
-          id: `${paraIndex}`,
-          bbox: { x: 0, y: 0, width: 0, height: 0 },
-          confidence: tesseractData.confidence,
-          lines: lines.map((lineText, lineIndex) => ({
-            id: lineIndex,
-            bbox: { x: 0, y: 0, width: 0, height: 0 },
-            text: lineText,
-            confidence: tesseractData.confidence,
-            words: processWords(
-              lineText.trim().split(/\s+/).map((text, i) => ({
-                id: i,
-                text,
-                bbox: { x: 0, y: 0, width: 0, height: 0 },
-                confidence: tesseractData.confidence
-              }))
-            )
-          }))
-        });
-      });
   }
 
   console.log('Extracted', paragraphs.length, 'paragraphs with',
-    paragraphs.reduce((sum, p) => sum + p.lines.length, 0), 'total lines');
+  paragraphs.reduce((sum, p) => sum + p.lines.length, 0), 'total lines');
 
   return {
     paragraphs,
@@ -237,28 +173,23 @@ function extractStructuredData(tesseractData, selectionCoords) {
   };
 }
 
-// Process OCR on captured screenshot using Worker
 async function processOCR(imageBuffer, coordinates, mainWindow) {
   try {
     console.log('Starting OCR processing...');
     ocrData.isProcessing = true;
 
-    // Notify renderer that OCR is processing
     mainWindow.webContents.send(IPC_CHANNELS.OCR_PROCESSING);
 
-    // Create a Tesseract worker for non-blocking OCR
     const worker = await Tesseract.createWorker(OCR_CONFIG.LANGUAGE, OCR_CONFIG.WORKER_COUNT, {
       logger: m => {
         console.log(m);
-        // Send progress updates to renderer
         if (m.status === 'recognizing text') {
           mainWindow.webContents.send(IPC_CHANNELS.OCR_PROGRESS, Math.round(m.progress * 100));
         }
       }
     });
 
-    // Run Tesseract OCR with worker
-    const result = await worker.recognize(imageBuffer);
+    const result = await worker.recognize(imageBuffer, {}, { blocks: true });
 
     // Terminate worker to free resources
     await worker.terminate();

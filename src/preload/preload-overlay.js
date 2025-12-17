@@ -6,5 +6,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
   selectionComplete: (coordinates) => ipcRenderer.send('selection-complete', coordinates),
 
   // Send selection cancelled
-  selectionCancelled: () => ipcRenderer.send('selection-cancelled')
+  selectionCancelled: () => ipcRenderer.send('selection-cancelled'),  
 });

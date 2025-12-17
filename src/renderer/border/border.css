@@ -16,3 +16,20 @@ body {
   height: 100%;
   display: block;
 }
+
+/* Apply to BOTH canvases */
+canvas {
+  position: absolute; /* This stacks them */
+  top: 0;
+  left: 0;
+  display: block;
+}
+#border-canvas {
+  z-index: 1; /* Border sits on top */
+  pointer-events: none;
+}
+
+#highlight-canvas {
+  z-index: 2; /* Highlight sits underneath */
+  pointer-events: none;
+}

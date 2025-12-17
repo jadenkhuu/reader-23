@@ -17,8 +17,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onSelectionCleared: (callback) => {
     ipcRenderer.on('selection-cleared', () => callback());
   },
-
-  // NEW: OCR event listeners
   onOCRProcessing: (callback) => {
     ipcRenderer.on('ocr-processing', () => callback());
   },
@@ -50,5 +48,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('window-pinned-state-changed', (event, isPinned) => {
       callback(isPinned);
     });
-  }
+  },
+  updateHighlight: (rect) => ipcRenderer.send('update-highlight', rect),
 });

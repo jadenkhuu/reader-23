@@ -12,6 +12,8 @@ const IPC_CHANNELS = {
   CLEAR_SELECTION: 'clear-selection',
   REFRESH_OCR: 'refresh-ocr',
 
+  UPDATE_HIGHLIGHT: 'update-highlight',
+
   // Overlay window to main process
   SELECTION_COMPLETE: 'selection-complete',
   SELECTION_CANCELLED: 'selection-cancelled',
@@ -28,8 +30,8 @@ const IPC_CHANNELS = {
 // Window Configuration
 const WINDOW_CONFIG = {
   MAIN: {
-    WIDTH: 416,
-    HEIGHT: 680,
+    WIDTH: 520,
+    HEIGHT: 850,
     RESIZABLE: false,
     MAXIMIZABLE: false,
     FULLSCREENABLE: false,

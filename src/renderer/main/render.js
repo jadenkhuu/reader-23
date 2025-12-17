@@ -67,8 +67,6 @@ function getWordDelay(word = null) {
   }
   return baseDelay;
 }
-
-
 // Get word at specific position (helper function)
 function getWordAt(paragraphIdx, lineIdx, wordIdx) {
   if (!ocrData || !ocrData.paragraphs.length) return null;
@@ -83,7 +81,32 @@ function getWordAt(paragraphIdx, lineIdx, wordIdx) {
   return line.words[wordIdx];
 }
 
+
 // ===== Main Display and Reading Functions ===== //
+
+// Updates line highlight in border window
+function updateLineHighlight() {
+  // Safety checks
+  if (!ocrData || !ocrData.paragraphs.length || !selectionCoordinates) return;
+  
+  const paragraph = ocrData.paragraphs[currentParagraphIndex];
+  if (!paragraph) return;
+  
+  const line = paragraph.lines[currentLineIndex];
+  if (!line || !line.bbox) return;
+
+  // Calculate coordinates RELATIVE to the selection window
+  // (Because the border window is positioned at selectionCoordinates.x/y)
+  const relativeBox = {
+    x: line.bbox.x - selectionCoordinates.x,
+    y: line.bbox.y - selectionCoordinates.y,
+    width: line.bbox.width,
+    height: line.bbox.height
+  };
+
+  // Send to main process -> border window
+  window.electronAPI.updateHighlight(relativeBox);
+}
 
 // Get previous word
 function getPreviousWord() {
@@ -134,6 +157,8 @@ function getCurrentWord() {
   const line = paragraph.lines[currentLineIndex];
   if (!line || !line.words.length) return null;
 
+  console.log('test', line.bbox);
+
   return line.words[currentWordIndex];
 }
 // Advance to next word
@@ -150,6 +175,7 @@ function advanceWord() {
   if (currentWordIndex >= line.words.length) {
     currentWordIndex = 0;
     currentLineIndex++;
+    updateLineHighlight();
 
     // Check if we've reached end of current paragraph
     if (currentLineIndex >= paragraph.lines.length) {
@@ -192,9 +218,9 @@ function startReading() {
     updateDisplayStatus('No text to read', 'error');
     return;
   }
+  const paragraph = ocrData.paragraphs[currentParagraphIndex];
 
   // Check if we're at the end of a paragraph, reset to beginning for replay
-  const paragraph = ocrData.paragraphs[currentParagraphIndex];
   if (currentLineIndex === paragraph.lines.length - 1) {
     const lastLine = paragraph.lines[currentLineIndex];
     if (currentWordIndex === lastLine.words.length - 1) {
@@ -218,6 +244,7 @@ function startReading() {
 
   if (currentWord) {
     displayWord(currentWord, prevWord, nextWord);
+    updateLineHighlight();
   }
 
   // Function to schedule next word with appropriate delay
@@ -289,6 +316,7 @@ function restartReading() {
         if (currentWord) {
           displayWord(currentWord, prevWord, nextWord);
         }
+        updateLineHighlight();
 
         scheduleNextWord(); // Recursively schedule the next word
       }
@@ -331,6 +359,7 @@ function nextLine() {
 
   if (currentWord) {
     displayWord(currentWord, prevWord, nextWord);
+    updateLineHighlight();
   }
 }
 // Move to prev line or paragraph
@@ -350,7 +379,6 @@ function prevLine() {
     currentLineIndex = 0;
     currentWordIndex = 0;
   } else {
-    // Move to previous paragraph
     currentParagraphIndex--;
     currentLineIndex = 0;
     currentWordIndex = 0;
@@ -363,26 +391,7 @@ function prevLine() {
 
   if (currentWord) {
     displayWord(currentWord, prevWord, nextWord);
-  }
-}
-
-// Go back 2 lines (replay)
-function replayLines() {
-  stopReading();
-
-  if (!ocrData || !ocrData.paragraphs.length) return;
-
-  // Go back 2 lines
-  currentLineIndex = Math.max(0, currentLineIndex - 2);
-  currentWordIndex = 0;
-
-  // Display first word of that line with context
-  const currentWord = getCurrentWord();
-  const prevWord = getPreviousWord();
-  const nextWord = getNextWord();
-
-  if (currentWord) {
-    displayWord(currentWord, prevWord, nextWord);
+    updateLineHighlight();
   }
 }
 

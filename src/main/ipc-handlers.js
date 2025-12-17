@@ -5,6 +5,7 @@ const { createBorderWindow, closeBorderWindow } = require('./windows/BorderWindo
 const { getMainWindow } = require('./windows/MainWindow');
 const { captureSelectedArea } = require('./ocr/capture');
 const { processOCR, resetOcrData } = require('./ocr/processor');
+const { getBorderWindow } = require('./windows/BorderWindow');
 
 // Store selection state
 let selectionState = {
@@ -159,6 +160,13 @@ function registerIPCHandlers() {
       mainWindow.webContents.send('window-pinned-state-changed', newPinnedState);
     } else {
       console.error('[Main] Main window not found');
+    }
+  });
+  
+  ipcMain.on(IPC_CHANNELS.UPDATE_HIGHLIGHT, (event, relativeBounds) => {
+    const borderWindow = getBorderWindow();
+    if (borderWindow && !borderWindow.isDestroyed()) {
+      borderWindow.webContents.send(IPC_CHANNELS.UPDATE_HIGHLIGHT, relativeBounds);
     }
   });
 }
