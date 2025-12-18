@@ -1,3 +1,5 @@
+
+https://github.com/user-attachments/assets/2ee692af-dec7-4005-97ea-9a4a7ed50a28
 reader-23
 -----
 
@@ -14,9 +16,7 @@ reader-23 is an application which aims to address the challenge of visual tracki
 
 Building upon an existing prototype, the app will iterate through words in a sentence and paragraph, displaying them sequentially at a centralised position, increasing the users ability to read words quickly. This app is not meant to replace reading entirely, the intention of this application is to be used along side traditional reading as a floating helper.
 
-<div align="center">
-  <video src="https://github.com/user-attachments/assets/259c33aa-b585-4ee2-b45f-388ee7e1b6b5" width="600" controls autoplay loop muted playsinline></video>
-</div>
+<div align="center">https://github.com/user-attachments/assets/8582d018-3bbd-4b21-bfbb-eb9c6c71fc3f</div>
 
 This app aims to assist users who typically have trouble keeping track of their reading progress with traditional formatted paragraphs. This app can also help readers who want to consume text-based content more quickly and efficiently. This approach reduces cognitive load and eye strain, making digital content more accessible for users who may have reading difficulties, dyslexia, ADHD, or visual processing challenges. 
 
