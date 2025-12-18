@@ -47,21 +47,7 @@ async function captureSelectedArea(coordinates, mainWindow) {
 
     console.log('Crop area:', cropArea);
     
-    // // Check if dimensions exceed the maximum
-    // if (currentSize.width > maxDimension || currentSize.height > maxDimension) {
-    //   console.log('Image too large, halving dimensions...');
-      
-    //   // Simply half the dimensions instead of capping at maxDimension
-    //   finalImage = croppedImage.resize({
-    //     width: Math.round(currentSize.width * 0.75),
-    //     height: Math.round(currentSize.height * 0.75),
-    //     quality: 'good'
-    //   });
-    //   console.log('Resized to:', finalImage.getSize());
-    // }
-
     const finalImage = screenshot.crop(cropArea);
-    // Convert to PNG buffer
     const imageBuffer = finalImage.toPNG();
 
     console.log('Image buffer size:', imageBuffer.length, 'bytes');
