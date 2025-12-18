@@ -3,9 +3,9 @@ reader-23
 
 *Team: [Jaden Khuu]*
 
-*Status: Prototype v1.0*
+*Status: Version 1.1
 
-*Last Updated: 09/11/2025*
+*Last Updated: 18/12/2025*
 
 Description
 -----
