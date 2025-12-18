@@ -3,7 +3,7 @@ reader-23
 
 *Team: [Jaden Khuu]*
 
-*Status: Version 1.1
+*Status: Version 1.1*
 
 *Last Updated: 18/12/2025*
 
