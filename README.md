@@ -25,7 +25,7 @@ This app aims to assist users who typically have trouble keeping track of their 
 Installation
 -----
 
-1. Navigate to the [release page](https://www.google.com](https://github.com/jadenkhuu/reader-23/releases) on the right side of the GitHub repo.
+1. Navigate to the [releases page](https://github.com/jadenkhuu/reader-23/releases) on the right side of the GitHub repo.
 2. Download the setup.exe of the latest version.
 3. Run the setup.exe to install the app as a program on your machine.
 4. reader-23 will launch after set up
