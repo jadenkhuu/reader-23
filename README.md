@@ -12,7 +12,7 @@ Description
 
 reader-23 is an application which aims to address the challenge of visual tracking in traditional paragraph and text formatting to assist users in reading and comprehension. It is built on the scientific research method called Rapid serial visual presentation (RSVP) which involves presenting a series of visual stimuli, such as words or images, one after another in quick succession at the same location. This approach to present visual stimuli should improve the users ability to focus and heighten their ability to consume text-based content.
 
-For a better understanding of what RSVP, try it out for yourself with this 20 second demo from Quirkology on YouTube: https://youtu.be/K8dIVNDMA_0
+For a better understanding of what RSVP is, try it out for yourself with this 20 second demo from Quirkology on YouTube: https://youtu.be/K8dIVNDMA_0
 
 The application is intended to be used as a floating helper, sitting beside the users main display of text. reader-23 will iterate through words in paragraph, displaying them sequentially at a centralised position, increasing the users ability to read words quickly. This app is not meant to replace reading entirely, the intention of this application is to be used along side traditional reading as a tool to assist readers who may get lost following traditional line reading. As such, a line highlight will also follow the selected text, keeping track of where the user is up to for reading, allowing them to refer back to the original medium should they need to. 
 
